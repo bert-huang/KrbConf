@@ -1,26 +1,20 @@
-package com.cepw.model.section;
+package com.cepw.model.node.section;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public abstract class Section {
 
-  private Map<String, Object> entries;
+  protected Map<String, Object> entries;
 
   public Section() {
-    entries = new HashMap<String, Object>();
+    entries = new HashMap<>();
   }
 
-  public Object add(String key, Object val) {
-
-    Object obj = entries.get(key);
-    if (obj instanceof String) {
-      String str = (String) obj;
-      if (str.trim().endsWith("*")) {
-        return obj;
-      }
-    }
-
+  public Object put(String key, Object val) {
     return entries.put(key, val);
   }
 
@@ -36,4 +30,7 @@ public abstract class Section {
     return entries.get(key);
   }
 
+  public Map<String, Object> getEntries() {
+    return this.entries;
+  }
 }
