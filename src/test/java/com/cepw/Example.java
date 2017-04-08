@@ -1,24 +1,20 @@
 package com.cepw;
 
-import com.cepw.exception.KrbConfParseException;
 import com.cepw.model.KrbConf;
+import com.cepw.utils.ObjectUtils;
 import java.io.File;
-import java.net.URL;
 
 public class Example {
 
   public static void main(String[] args) {
-    ClassLoader classLoader = Example.class.getClassLoader();
-    URL url = classLoader.getResource("krb5.conf");
-    if (url != null) {
-      File krb5Conf = new File(url.getFile());
-      try {
-        KrbConf conf = KrbConfParser.parse(krb5Conf);
-        System.out.println(conf);
-      }
-      catch (KrbConfParseException e) {
-        System.err.println(e.getMessage());
-      }
+    File krb5Conf = new File("krb5.conf");
+    try {
+      KrbConf conf = KrbConfParser.parse(krb5Conf);
+      System.out.println("Object Size: " + ObjectUtils.serialize(conf).length);
+      System.out.println(conf);
+    }
+    catch (Exception e) {
+      e.printStackTrace();
     }
   }
 }

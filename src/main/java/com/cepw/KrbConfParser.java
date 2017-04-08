@@ -2,13 +2,6 @@ package com.cepw;
 
 import com.cepw.exception.KrbConfParseException;
 import com.cepw.model.KrbConf;
-import com.cepw.model.node.section.AppDefaults;
-import com.cepw.model.node.section.CAPaths;
-import com.cepw.model.node.section.DomainRealm;
-import com.cepw.model.node.section.LibDefaults;
-import com.cepw.model.node.section.Logging;
-import com.cepw.model.node.section.Login;
-import com.cepw.model.node.section.Realms;
 import com.cepw.model.node.section.Section;
 import java.io.File;
 import java.io.FileReader;
@@ -66,31 +59,12 @@ public class KrbConfParser {
             throw new KrbConfParseException(errorMsg);
           }
           scope = Scope.SECTION;
-
           String sectionName = matcher.group(1).trim();
-          switch (sectionName) {
-            case LibDefaults.SECTION:
-              section = krbConf.getLibDefaults(); break;
-            case DomainRealm.SECTION:
-              section = krbConf.getDomainRealm(); break;
-            case Realms.SECTION:
-              section = krbConf.getRealms();      break;
-            case Login.SECTION:
-              section = krbConf.getLogin();       break;
-            case Logging.SECTION:
-              section = krbConf.getLogging();     break;
-            case AppDefaults.SECTION:
-              section = krbConf.getAppDefaults(); break;
-            case CAPaths.SECTION:
-              section = krbConf.getCAPaths();     break;
-            default:
-              String errorMsg = "Invalid section " + sectionName + " at line: " + lr.getLineNumber();
-              throw new KrbConfParseException(errorMsg);
-          }
+          section = krbConf.getSection(sectionName);
           continue;
         }
         if (section == null) {
-          String errorMsg = "Variable not within section scope at line: " + lr.getLineNumber();
+          String errorMsg = "Definition before section. Error at line: " + lr.getLineNumber();
           throw new KrbConfParseException(errorMsg);
         }
 
@@ -100,9 +74,9 @@ public class KrbConfParser {
           String key = matcher.group(1).trim();
           String val = matcher.group(2).trim();
           String[] vals = val.replaceAll("\\s+", " ").split(" ");
-          Object obj = vals.length == 1 ? val : Arrays.asList(vals);
+          List<String> obj = new ArrayList<>(Arrays.asList(vals));
 
-          Map<String, Object> collection = null;
+          Map<String, Object> collection;
           switch (scope) {
             case SECTION:
               collection = section.getEntries();
@@ -115,34 +89,19 @@ public class KrbConfParser {
           }
 
           Object extObj = collection.get(key);
-          /* Combine the string values into a list */
-          if (extObj instanceof String) {
-            String str = (String) extObj;
-
-            List<String> lst = new ArrayList<>();
-            lst.add(str);
-            if (obj instanceof String) {
-              lst.add((String) obj);
-            }
-            else if (obj instanceof List) {
-              lst.addAll((List<String>) obj);
-            }
+          if (extObj instanceof List) {
+            List<List<String>> lst = (List<List<String>>) extObj;
+            lst.add(obj);
             collection.put(key, lst);
           }
-
-          /* Combine the new list with existing list */
-          else if (extObj instanceof List) {
-            List<String> lst = (List<String>) extObj;
-            if (obj instanceof String) {
-              lst.add((String) obj);
-            }
-            else if (obj instanceof List) {
-              lst.addAll((List<String>) obj);
-            }
-            collection.put(key, lst);
+          else if (extObj instanceof Map) {
+            String errorMsg = "Cannot convert multi value variable single value variable. Error at line: " + lr.getLineNumber();
+            throw new KrbConfParseException(errorMsg);
           }
           else {
-            collection.put(key, obj);
+            List<List<String>> lst = new ArrayList<>();
+            lst.add(obj);
+            collection.put(key, lst);
           }
           continue;
         }
@@ -152,13 +111,27 @@ public class KrbConfParser {
         if (matcher.matches()) {
 
           if (Scope.MULTI.equals(scope)) {
-            String errorMsg = "Unsupported nesting of multi value variables at line: " + lr.getLineNumber();
+            String errorMsg = "Unsupported nesting of multi value variables. Error at line: " + lr.getLineNumber();
             throw new KrbConfParseException(errorMsg);
           }
 
           String key = matcher.group(1).trim();
-          multi = new HashMap<>();
-          section.put(key, multi);
+          Object extObj = section.getEntries().get(key);
+          /* If a single value var exists, throw error */
+          if (extObj instanceof List) {
+            String errorMsg = "Cannot convert single value variable to multi value variable. Error at line: " + lr.getLineNumber();
+            throw new KrbConfParseException(errorMsg);
+          }
+          /* If an multi value var with the same key exists, use the existing var */
+          else if (extObj instanceof Map) {
+            multi = (Map<String, Object>)extObj;
+          }
+          /* Create a new multi value var */
+          else {
+            multi = new HashMap<>();
+          }
+
+          section.getEntries().put(key, multi);
           scope = Scope.MULTI;
           continue;
         }
@@ -171,10 +144,14 @@ public class KrbConfParser {
           continue;
         }
 
-        throw new KrbConfParseException("Unrecognisable pattern at line: " + lr.getLineNumber());
+        throw new KrbConfParseException("Unrecognisable pattern. Error at line: " + lr.getLineNumber());
       }
       return krbConf;
-    } catch (Exception e) {
+    }
+    catch (KrbConfParseException e) {
+      throw e;
+    }
+    catch (Exception e) {
       throw new KrbConfParseException(e);
     }
   }

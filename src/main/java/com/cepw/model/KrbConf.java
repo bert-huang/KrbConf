@@ -7,8 +7,16 @@ import com.cepw.model.node.section.LibDefaults;
 import com.cepw.model.node.section.Logging;
 import com.cepw.model.node.section.Login;
 import com.cepw.model.node.section.Realms;
+import com.cepw.model.node.section.Section;
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
-public class KrbConf {
+public class KrbConf implements Serializable {
+
+  private static final long serialVersionUID = 6282488388607321323L;
+
+  private Map<String, Section> sections;
 
   private LibDefaults libDefaults;
 
@@ -25,40 +33,50 @@ public class KrbConf {
   private CAPaths caPaths;
 
   public KrbConf() {
-    this.libDefaults  = new LibDefaults();
-    this.domainRealm  = new DomainRealm();
-    this.realms       = new Realms();
-    this.login        = new Login();
-    this.logging      = new Logging();
-    this.appDefaults  = new AppDefaults();
-    this.caPaths      = new CAPaths();
+
+    sections = new HashMap<>();
+    sections.put(LibDefaults.SECTION, new LibDefaults());
+    sections.put(DomainRealm.SECTION, new DomainRealm());
+    sections.put(Realms.SECTION, new Realms());
+    sections.put(Login.SECTION, new Login());
+    sections.put(Logging.SECTION, new Logging());
+    sections.put(AppDefaults.SECTION, new AppDefaults());
+    sections.put(CAPaths.SECTION, new CAPaths());
   }
 
   public LibDefaults getLibDefaults() {
-    return libDefaults;
+    return (LibDefaults) sections.get(LibDefaults.SECTION);
   }
 
   public DomainRealm getDomainRealm() {
-    return domainRealm;
+    return (DomainRealm) sections.get(DomainRealm.SECTION);
   }
 
   public Realms getRealms() {
-    return realms;
+    return (Realms) sections.get(Realms.SECTION);
   }
 
   public Login getLogin() {
-    return login;
+    return (Login) sections.get(Login.SECTION);
   }
 
   public Logging getLogging() {
-    return logging;
+    return (Logging) sections.get(Logging.SECTION);
   }
 
   public AppDefaults getAppDefaults() {
-    return appDefaults;
+    return (AppDefaults) sections.get(AppDefaults.SECTION);
   }
 
   public CAPaths getCAPaths() {
-    return caPaths;
+    return (CAPaths) sections.get(CAPaths.SECTION);
+  }
+
+  public Section getSection(String key) {
+    return sections.get(key);
+  }
+
+  public String print() {
+    return null;
   }
 }
