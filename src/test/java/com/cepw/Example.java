@@ -12,6 +12,7 @@ public class Example {
       KrbConf conf = KrbConfParser.parse(krb5Conf);
       System.out.println("Object Size: " + ObjectUtils.serialize(conf).length);
       System.out.println(conf);
+      System.out.println("===");
     }
     catch (Exception e) {
       e.printStackTrace();

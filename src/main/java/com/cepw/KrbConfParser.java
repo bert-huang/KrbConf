@@ -2,7 +2,7 @@ package com.cepw;
 
 import com.cepw.exception.KrbConfParseException;
 import com.cepw.model.KrbConf;
-import com.cepw.model.node.section.Section;
+import com.cepw.model.section.Section;
 import java.io.File;
 import java.io.FileReader;
 import java.io.LineNumberReader;
