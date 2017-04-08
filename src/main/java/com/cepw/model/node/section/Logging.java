@@ -1,4 +1,4 @@
-package com.cepw.model.section;
+package com.cepw.model.node.section;
 
 public class Logging extends Section {
 

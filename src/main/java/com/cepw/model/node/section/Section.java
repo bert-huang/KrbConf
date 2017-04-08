@@ -1,9 +1,10 @@
-package com.cepw.model.section;
+package com.cepw.model.node.section;
 
+import com.cepw.model.node.value.MultiValueNode;
+import com.cepw.model.node.value.SingleValueNode;
 import com.cepw.utils.StringUtils;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,12 +19,51 @@ public abstract class Section implements Serializable {
     entries = new HashMap<>();
   }
 
-  public Object put(String key, Object val) {
-    return entries.put(key, val);
+  public boolean add(SingleValueNode node) {
+    Object existingEntry = this.entries.get(node.getKey());
+    if (existingEntry == null) {
+      List<List<String>> list = new ArrayList<>();
+      list.add(node.getValue());
+      this.entries.put(node.getKey(), list);
+      return true;
+    }
+    else if (existingEntry instanceof List) {
+      ((List<List<String>>)existingEntry).add(node.getValue());
+      return true;
+    }
+    else if (existingEntry instanceof Map) {
+      return false;
+    }
+    return false;
   }
 
-  public Object remove(String key) {
-    return entries.remove(key);
+  public boolean add(MultiValueNode node) {
+    Object existingEntry = this.entries.get(node.getKey());
+    if (existingEntry == null) {
+      this.entries.put(node.getKey(), node.getValues());
+      return true;
+    }
+    else if (existingEntry instanceof Map) {
+      Map<String, Object> existingMap = (Map<String, Object>)existingEntry;
+      for(Map.Entry<String, Object> entry : node.getValues().entrySet()) {
+        if (existingMap.get(entry.getKey()) == null) {
+          existingMap.put(entry.getKey(), entry.getValue());
+        }
+        else {
+          List<List<String>> existingObj = (List<List<String>>) existingMap.get(entry.getKey());
+          existingObj.addAll(((List<List<String>>)entry.getValue()));
+        }
+      }
+      return true;
+    }
+    else if (existingEntry instanceof List) {
+      return false;
+    }
+    return false;
+  }
+
+  public void remove(String key) {
+    this.entries.remove(key);
   }
 
   public void clear() {
@@ -60,15 +100,16 @@ public abstract class Section implements Serializable {
     for (Map.Entry<String, Object> entry : entries.entrySet()) {
       if (entry.getValue() instanceof List) {
         List<List<String>> lists = (List<List<String>>) entry.getValue();
-        sb.append(StringUtils.repeat(" ", 2 * depth));
 
-        sb.append(entry.getKey());
-        sb.append(" =");
         for (List<String> values : lists) {
+          sb.append(StringUtils.repeat(" ", 2 * depth));
+          sb.append(entry.getKey());
+          sb.append(" =");
           for (String value : values) {
             sb.append(" ");
             sb.append(value);
           }
+          sb.append("\n");
         }
       } else if (entry.getValue() instanceof Map) {
         sb.append(StringUtils.repeat(" ", 2 * depth));
@@ -77,11 +118,11 @@ public abstract class Section implements Serializable {
         sb.append(traverse((Map<String, Object>)entry.getValue(), depth+1));
         sb.append(StringUtils.repeat(" ", 2 * depth));
         sb.append("}");
+        sb.append("\n");
       }
       else {
-        throw new IllegalStateException("Encountered unknown entry");
+        throw new IllegalStateException("Encountered unknown entry: " + entry);
       }
-      sb.append("\n");
     }
     return sb.toString();
   }

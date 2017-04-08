@@ -1,13 +1,13 @@
 package com.cepw.model;
 
-import com.cepw.model.section.AppDefaults;
-import com.cepw.model.section.CAPaths;
-import com.cepw.model.section.DomainRealm;
-import com.cepw.model.section.LibDefaults;
-import com.cepw.model.section.Logging;
-import com.cepw.model.section.Login;
-import com.cepw.model.section.Realms;
-import com.cepw.model.section.Section;
+import com.cepw.model.node.section.AppDefaults;
+import com.cepw.model.node.section.CAPaths;
+import com.cepw.model.node.section.DomainRealm;
+import com.cepw.model.node.section.LibDefaults;
+import com.cepw.model.node.section.Logging;
+import com.cepw.model.node.section.Login;
+import com.cepw.model.node.section.Realms;
+import com.cepw.model.node.section.Section;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,22 +18,7 @@ public class KrbConf implements Serializable {
 
   private Map<String, Section> sections;
 
-  private LibDefaults libDefaults;
-
-  private DomainRealm domainRealm;
-
-  private Realms realms;
-
-  private Login login;
-
-  private Logging logging;
-
-  private AppDefaults appDefaults;
-
-  private CAPaths caPaths;
-
   public KrbConf() {
-
     sections = new HashMap<>();
     sections.put(LibDefaults.SECTION_NAME, new LibDefaults());
     sections.put(DomainRealm.SECTION_NAME, new DomainRealm());

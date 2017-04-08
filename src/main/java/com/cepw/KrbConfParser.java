@@ -2,12 +2,13 @@ package com.cepw;
 
 import com.cepw.exception.KrbConfParseException;
 import com.cepw.model.KrbConf;
-import com.cepw.model.section.Section;
+import com.cepw.model.node.section.Section;
 import java.io.File;
 import java.io.FileReader;
 import java.io.LineNumberReader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -73,8 +74,9 @@ public class KrbConfParser {
         if (matcher.matches()) {
           String key = matcher.group(1).trim();
           String val = matcher.group(2).trim();
-          String[] vals = val.replaceAll("\\s+", " ").split(" ");
-          List<String> obj = new ArrayList<>(Arrays.asList(vals));
+          String[] vals = val.replaceAll("\\s+", " ").split("\\s");
+          List<String> obj = new ArrayList<>();
+          Collections.addAll(obj, vals);
 
           Map<String, Object> collection;
           switch (scope) {
