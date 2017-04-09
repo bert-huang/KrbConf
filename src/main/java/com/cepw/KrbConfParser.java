@@ -78,7 +78,7 @@ public class KrbConfParser {
 
           KrbConfNode node = nodeStack.isEmpty() ? null : nodeStack.peek();
           if (node instanceof ComplexKeyValuesNode) {
-            String errorMsg = "Unexpected termination of ComplexKeyValuesNode. Error at line: " + lr.getLineNumber();
+            String errorMsg = "Complex key-value not closed at line: " + lr.getLineNumber();
             throw new KrbConfParseException(errorMsg);
           }
           /* Pop the previous sectionNode */
@@ -89,14 +89,14 @@ public class KrbConfParser {
           String sectionName = matcher.group(1).trim();
           SectionNode section = krbConf.getSection(sectionName);
           if (section == null) {
-            String errorMsg = "Unknown section " + sectionName + ". Error at line: " + lr.getLineNumber();
+            String errorMsg = "Unknown section " + sectionName + " at line: " + lr.getLineNumber();
             throw new KrbConfParseException(errorMsg);
           }
           nodeStack.push(section);
           continue;
         }
         if (nodeStack.isEmpty()) {
-          String errorMsg = "KeyValueNode definition before SectionNode. Error at line: " + lr.getLineNumber();
+          String errorMsg = "key-value definition before section at line: " + lr.getLineNumber();
           throw new KrbConfParseException(errorMsg);
         }
 
@@ -115,10 +115,6 @@ public class KrbConfParser {
           else if (node instanceof ComplexKeyValuesNode) {
             ((ComplexKeyValuesNode) node).add(svn);
           }
-          else {
-            String errorMsg = "Invalid node " + node + ". Error at line: " + lr.getLineNumber();
-            throw new KrbConfParseException(errorMsg);
-          }
           continue;
         }
 
@@ -133,7 +129,7 @@ public class KrbConfParser {
             nodeStack.push(mvn);
           }
           else {
-            String errorMsg = "ComplexKeyValuesNode nesting is not supported. Error at line: " + lr.getLineNumber();
+            String errorMsg = "Unsupported complex key-value nesting at line: " + lr.getLineNumber();
             throw new KrbConfParseException(errorMsg);
           }
           continue;
@@ -146,7 +142,7 @@ public class KrbConfParser {
           continue;
         }
 
-        throw new KrbConfParseException("Unrecognisable pattern. Error at line: " + lr.getLineNumber());
+        throw new KrbConfParseException("Invalid value at line: " + lr.getLineNumber());
       }
       return krbConf;
     }
