@@ -16,11 +16,6 @@ public class Example {
       System.out.println(emptyConf);
       System.out.println();
 
-      System.out.println(new SimpleKeyValuesNode("cepw.co.nz", "CEPW.CO.NZ"));
-      System.out.println(new ComplexKeyValuesNode("CEPW.CO.NZ",
-              new SimpleKeyValuesNode("kdc", "cpew-omega.domain.co.nz"),
-              new SimpleKeyValuesNode("default_domain", "mit.edu")));
-
       System.out.println("=== New KrbConf ===");
       KrbConf newConf = new KrbConf();
       newConf.getLibDefaults().add(new SimpleKeyValuesNode("default_realm", "CEPW.CO.NZ"));

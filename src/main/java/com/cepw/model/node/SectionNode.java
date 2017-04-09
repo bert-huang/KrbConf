@@ -11,7 +11,7 @@ import java.util.Map;
  * A {@link SectionNode} can hold multiple {@link SimpleKeyValuesNode}s and
  * multiple {@link ComplexKeyValuesNode}s.
  */
-public abstract class SectionNode<T> extends KrbConfNode {
+public abstract class SectionNode extends KrbConfNode {
 
   /**
    * The {@code serialVersionUID}
