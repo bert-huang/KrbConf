@@ -31,7 +31,7 @@ public class KrbConf implements Serializable {
 
   static {
     Map<String, Class<? extends SectionNode>> sections = new HashMap<>();
-    sections.put(LibDefaultsSection.KEY, AppDefaultsSection.class);
+    sections.put(AppDefaultsSection.KEY, AppDefaultsSection.class);
     sections.put(CAPathsSection.KEY, CAPathsSection.class);
     sections.put(DbDefaultsSection.KEY, DbDefaultsSection.class);
     sections.put(DbModulesSection.KEY, DbModulesSection.class);

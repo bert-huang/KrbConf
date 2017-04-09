@@ -12,7 +12,7 @@ public abstract class KeyValueNode extends KrbConfNode {
   private static final long serialVersionUID = 8154855487572802648L;
 
   /**
-   * Constrcutor.
+   * Constructor.
    *
    * @param key the key of the node.
    */
