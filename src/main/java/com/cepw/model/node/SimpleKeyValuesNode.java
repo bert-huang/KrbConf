@@ -4,42 +4,100 @@ import com.cepw.utils.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SimpleKeyValuesNode extends Node {
+/**
+ * A node representing a simple key-value entry.
+ * A simple key-value node can hold multiple {@link String} values.
+ */
+public class SimpleKeyValuesNode extends KeyValueNode {
 
+  /**
+   * The {@code serialVersionUID}
+   */
+  private static final long serialVersionUID = -1326720630146308942L;
+
+  /**
+   * The {@link List} of values.
+   * krb.conf simple key value can be in space separated values.
+   * This {@link List} is used to store each individual value.
+   */
   private List<String> values;
 
-  public SimpleKeyValuesNode(String key, String... args) {
+  /**
+   * Constructor.
+   *
+   * @param key the key of the node.
+   * @param vargs the array of values.
+   */
+  public SimpleKeyValuesNode(String key, String... vargs) {
     super(key);
-
-    if (args == null || args.length == 0) {
-      throw new IllegalArgumentException("values cannot be null or empty");
-    }
     List<String> values = new ArrayList<>();
-    for(String value : args) {
-      values.add(value.trim());
+    if (vargs != null) {
+      for(String value : vargs) {
+        values.add(value.trim());
+      }
     }
-
     this.values = values;
   }
 
+  /**
+   * Constructor.
+   *
+   * @param key the key of the node.
+   * @param values the {@link List} of values.
+   */
   public SimpleKeyValuesNode(String key, List<String> values) {
     this(key, values.toArray(new String[values.size()]));
   }
 
-  public void add(String string) {
-    this.values.add(string);
+  /**
+   * Adds a value to the node.
+   *
+   * @param value the value to add.
+   */
+  public String add(String value) {
+    this.values.add(value);
+    return value;
   }
 
-  public void remove(String string) {
-    this.values.remove(string);
+  /**
+   * Removes a value from the node.
+   *
+   * @param value the value to remove.
+   */
+  public String remove(String value) {
+    this.values.remove(value);
+    return value;
   }
 
+  /**
+   * Clear all the values from the node
+   */
   public void clear() {
     this.values.clear();
   }
 
-  public List<String> getAllValues() {
+  /**
+   * Returns the underlying ADT holding the information about
+   * this node.
+   *
+   * @return the {@link List} holding values of the {@link SimpleKeyValuesNode}
+   */
+  public List<String> getRawData() {
     return values;
+  }
+
+  @Override
+  public String toString(int indent) {
+    StringBuilder sb = new StringBuilder();
+    sb.append(StringUtils.repeat(INDENT_CHARACTER, indent));
+    sb.append(this.getKey());
+    sb.append(" =");
+    for (String value : values) {
+      sb.append(" ");
+      sb.append(value);
+    }
+    sb.append("\n");
+    return sb.toString();
   }
 
   @Override
@@ -58,18 +116,5 @@ public class SimpleKeyValuesNode extends Node {
     int result = super.hashCode();
     result = 31 * result + values.hashCode();
     return result;
-  }
-
-  public String print(int indent) {
-    StringBuilder sb = new StringBuilder();
-    sb.append(StringUtils.repeat(INDENT_CHARACTER, indent));
-    sb.append(key);
-    sb.append(" =");
-    for (String value : values) {
-      sb.append(" ");
-      sb.append(value);
-    }
-    sb.append("\n");
-    return sb.toString();
   }
 }

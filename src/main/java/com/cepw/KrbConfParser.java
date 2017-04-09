@@ -2,7 +2,7 @@ package com.cepw;
 
 import com.cepw.exception.KrbConfParseException;
 import com.cepw.model.KrbConf;
-import com.cepw.model.node.Node;
+import com.cepw.model.node.KrbConfNode;
 import com.cepw.model.node.SectionNode;
 import com.cepw.model.node.ComplexKeyValuesNode;
 import com.cepw.model.node.SimpleKeyValuesNode;
@@ -13,24 +13,56 @@ import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * A krb.conf parser.
+ */
 public class KrbConfParser {
 
+  /**
+   * The {@link Pattern} for section header.
+   */
   private static final Pattern SECTION_HEADER_PATTERN = Pattern.compile("^\\s*\\[([A-Za-z_]+)]\\s*$");
+
+  /**
+   * The {@link Pattern} for simple key-value entry.
+   */
   private static final Pattern SIMPLE_KEY_VALUES_PATTERN = Pattern.compile("^\\s*([^\\s=]+)\\s*=\\s*([[\\S]+\\s*]+[\\S]+)\\s*(?<!\\{)$");
+
+  /**
+   * The {@link Pattern} for the start of complex key-value entry.
+   */
   private static final Pattern COMPLEX_KEY_VALUES_START_PATTERN = Pattern.compile("^\\s*([^\\s=]+)\\s*=\\s*\\{\\s*$");
+
+  /**
+   * The {@link Pattern} for the end of complex key-value entry.
+   */
   private static final Pattern COMPLEX_KEY_VALUES_END_PATTERN = Pattern.compile("^\\s*}\\s*$");
 
-  public static KrbConf parse(String file) throws KrbConfParseException {
-    return parse(new File(file));
+  /**
+   * Parse the krb.conf file.
+   *
+   * @param path the path of the config file
+   * @return the {@link KrbConf}
+   * @throws KrbConfParseException if parsing failed.
+   */
+  public static KrbConf parse(String path) throws KrbConfParseException {
+    return parse(new File(path));
   }
 
+  /**
+   * Parse the krb.conf file.
+   *
+   * @param file the {@link File} of the config
+   * @return the {@link KrbConf}
+   * @throws KrbConfParseException if parsing failed.
+   */
   public static KrbConf parse(File file) throws KrbConfParseException {
     try {
       KrbConf krbConf = new KrbConf();
       LineNumberReader lr = new LineNumberReader(new FileReader(file));
 
       String line;
-      Stack<Node> nodeStack = new Stack<>();
+      Stack<KrbConfNode> nodeStack = new Stack<>();
       while ((line = lr.readLine()) != null) {
 
         /* Ignore blank or commented lines */
@@ -44,9 +76,9 @@ public class KrbConfParser {
         matcher = SECTION_HEADER_PATTERN.matcher(line);
         if (matcher.matches()) {
 
-          Node node = nodeStack.isEmpty() ? null : nodeStack.peek();
+          KrbConfNode node = nodeStack.isEmpty() ? null : nodeStack.peek();
           if (node instanceof ComplexKeyValuesNode) {
-            String errorMsg = "Unexpected termination of ComplexKeyValuesNode at line: " + lr.getLineNumber();
+            String errorMsg = "Unexpected termination of ComplexKeyValuesNode. Error at line: " + lr.getLineNumber();
             throw new KrbConfParseException(errorMsg);
           }
           /* Pop the previous sectionNode */
@@ -55,7 +87,12 @@ public class KrbConfParser {
           }
 
           String sectionName = matcher.group(1).trim();
-          nodeStack.push(krbConf.getSection(sectionName));
+          SectionNode section = krbConf.getSection(sectionName);
+          if (section == null) {
+            String errorMsg = "Unknown section " + sectionName + ". Error at line: " + lr.getLineNumber();
+            throw new KrbConfParseException(errorMsg);
+          }
+          nodeStack.push(section);
           continue;
         }
         if (nodeStack.isEmpty()) {
@@ -71,7 +108,7 @@ public class KrbConfParser {
           String[] vals = val.replaceAll("\\s+", " ").split("\\s");
           SimpleKeyValuesNode svn = new SimpleKeyValuesNode(key, vals);
 
-          Node node = nodeStack.isEmpty() ? null : nodeStack.peek();
+          KrbConfNode node = nodeStack.isEmpty() ? null : nodeStack.peek();
           if (node instanceof SectionNode) {
             ((SectionNode) node).add(svn);
           }
@@ -89,7 +126,7 @@ public class KrbConfParser {
         matcher = COMPLEX_KEY_VALUES_START_PATTERN.matcher(line);
         if (matcher.matches()) {
           String key = matcher.group(1).trim();
-          Node node = nodeStack.isEmpty() ? null : nodeStack.peek();
+          KrbConfNode node = nodeStack.isEmpty() ? null : nodeStack.peek();
           if (node instanceof SectionNode) {
             ComplexKeyValuesNode mvn = new ComplexKeyValuesNode(key);
             ((SectionNode) node).add(mvn);

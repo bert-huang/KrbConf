@@ -16,11 +16,16 @@ public class Example {
       System.out.println(emptyConf);
       System.out.println();
 
+      System.out.println(new SimpleKeyValuesNode("cepw.co.nz", "CEPW.CO.NZ"));
+      System.out.println(new ComplexKeyValuesNode("CEPW.CO.NZ",
+              new SimpleKeyValuesNode("kdc", "cpew-omega.domain.co.nz"),
+              new SimpleKeyValuesNode("default_domain", "mit.edu")));
+
       System.out.println("=== New KrbConf ===");
       KrbConf newConf = new KrbConf();
       newConf.getLibDefaults().add(new SimpleKeyValuesNode("default_realm", "CEPW.CO.NZ"));
       newConf.getDomainRealm().add(new SimpleKeyValuesNode("cepw.co.nz", "CEPW.CO.NZ"));
-      newConf.getDomainRealm().add(new SimpleKeyValuesNode("cepw.co.nz", "CEPW.CO.NZ"));
+      newConf.getDomainRealm().add(new SimpleKeyValuesNode(".cepw.co.nz", "CEPW.CO.NZ"));
       newConf.getRealms().add(new ComplexKeyValuesNode("CEPW.CO.NZ",
               new SimpleKeyValuesNode("master_kdc", "cepw-alpha.domain.co.nz"),
               new SimpleKeyValuesNode("admin_server", "cepw-gamma.domain.co.nz"),
@@ -31,6 +36,7 @@ public class Example {
               new SimpleKeyValuesNode("kdc", "cpew-omega.domain.co.nz"),
               new SimpleKeyValuesNode("default_domain", "mit.edu")));
       newConf.getDomainRealm().remove("cepw.co.nz");
+      System.out.println(newConf.getRealms().get("CEPW.CO.NZ", ComplexKeyValuesNode.class));
       System.out.println("Object Size: " + ObjectUtils.serialize(newConf).length);
       System.out.println(newConf);
       System.out.println();

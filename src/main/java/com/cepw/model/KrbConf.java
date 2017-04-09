@@ -1,62 +1,101 @@
 package com.cepw.model;
 
-import com.cepw.model.node.section.AppDefaults;
-import com.cepw.model.node.section.CAPaths;
-import com.cepw.model.node.section.DomainRealm;
-import com.cepw.model.node.section.LibDefaults;
-import com.cepw.model.node.section.Logging;
-import com.cepw.model.node.section.Login;
-import com.cepw.model.node.section.Realms;
+import com.cepw.model.node.section.AppDefaultsSection;
+import com.cepw.model.node.section.CAPathsSection;
+import com.cepw.model.node.section.DomainRealmSection;
+import com.cepw.model.node.section.LibDefaultsSection;
+import com.cepw.model.node.section.LoggingSection;
+import com.cepw.model.node.section.LoginSection;
+import com.cepw.model.node.section.RealmsSection;
 import com.cepw.model.node.SectionNode;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * The class representing the Kerberos configuration.
+ */
 public class KrbConf implements Serializable {
 
+  /**
+   * The {@code serialVersionUID}
+   */
   private static final long serialVersionUID = 6282488388607321323L;
 
+  /**
+   * The {@link SectionNode}s
+   */
   private Map<String, SectionNode> sections;
 
+  /**
+   * Constructor.
+   *
+   * Initialises all possible sections.
+   */
   public KrbConf() {
     sections = new HashMap<>();
-    sections.put(LibDefaults.SECTION_NAME, new LibDefaults());
-    sections.put(DomainRealm.SECTION_NAME, new DomainRealm());
-    sections.put(Realms.SECTION_NAME, new Realms());
-    sections.put(Login.SECTION_NAME, new Login());
-    sections.put(Logging.SECTION_NAME, new Logging());
-    sections.put(AppDefaults.SECTION_NAME, new AppDefaults());
-    sections.put(CAPaths.SECTION_NAME, new CAPaths());
+    sections.put(LibDefaultsSection.SECTION_NAME, new LibDefaultsSection());
+    sections.put(DomainRealmSection.SECTION_NAME, new DomainRealmSection());
+    sections.put(RealmsSection.SECTION_NAME, new RealmsSection());
+    sections.put(LoginSection.SECTION_NAME, new LoginSection());
+    sections.put(LoggingSection.SECTION_NAME, new LoggingSection());
+    sections.put(AppDefaultsSection.SECTION_NAME, new AppDefaultsSection());
+    sections.put(CAPathsSection.SECTION_NAME, new CAPathsSection());
   }
 
-  public LibDefaults getLibDefaults() {
-    return (LibDefaults) sections.get(LibDefaults.SECTION_NAME);
+  /**
+   * @return the {@link LibDefaultsSection}
+   */
+  public LibDefaultsSection getLibDefaults() {
+    return (LibDefaultsSection) sections.get(LibDefaultsSection.SECTION_NAME);
   }
 
-  public DomainRealm getDomainRealm() {
-    return (DomainRealm) sections.get(DomainRealm.SECTION_NAME);
+  /**
+   * @return the {@link DomainRealmSection}
+   */
+  public DomainRealmSection getDomainRealm() {
+    return (DomainRealmSection) sections.get(DomainRealmSection.SECTION_NAME);
   }
 
-  public Realms getRealms() {
-    return (Realms) sections.get(Realms.SECTION_NAME);
+  /**
+   * @return the {@link RealmsSection}
+   */
+  public RealmsSection getRealms() {
+    return (RealmsSection) sections.get(RealmsSection.SECTION_NAME);
   }
 
-  public Login getLogin() {
-    return (Login) sections.get(Login.SECTION_NAME);
+  /**
+   * @return the {@link LoginSection}
+   */
+  public LoginSection getLogin() {
+    return (LoginSection) sections.get(LoginSection.SECTION_NAME);
   }
 
-  public Logging getLogging() {
-    return (Logging) sections.get(Logging.SECTION_NAME);
+  /**
+   * @return the {@link LoggingSection}
+   */
+  public LoggingSection getLogging() {
+    return (LoggingSection) sections.get(LoggingSection.SECTION_NAME);
   }
 
-  public AppDefaults getAppDefaults() {
-    return (AppDefaults) sections.get(AppDefaults.SECTION_NAME);
+  /**
+   * @return the {@link AppDefaultsSection}
+   */
+  public AppDefaultsSection getAppDefaults() {
+    return (AppDefaultsSection) sections.get(AppDefaultsSection.SECTION_NAME);
   }
 
-  public CAPaths getCAPaths() {
-    return (CAPaths) sections.get(CAPaths.SECTION_NAME);
+  /**
+   * @return the {@link CAPathsSection}
+   */
+  public CAPathsSection getCAPaths() {
+    return (CAPathsSection) sections.get(CAPathsSection.SECTION_NAME);
   }
 
+  /**
+   * @return the {@link SectionNode} with the given key.
+   * Null if an invalid key for the {@link SectionNode} is specified.
+   */
   public SectionNode getSection(String key) {
     return sections.get(key);
   }
@@ -65,7 +104,7 @@ public class KrbConf implements Serializable {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     for (Map.Entry<String, SectionNode> section : sections.entrySet()) {
-      sb.append(section.getValue().print(0));
+      sb.append(section.getValue().toString(0));
     }
     return sb.toString();
   }
