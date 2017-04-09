@@ -1,13 +1,14 @@
 package com.cepw.model.node.section;
 
-public class LibDefaults extends Section {
+import com.cepw.model.node.SectionNode;
+
+public class LibDefaults extends SectionNode {
 
   private static final long serialVersionUID = -2294810939675626670L;
 
   public static final String SECTION_NAME = "libdefaults";
 
-  @Override
-  public String getSectionName() {
-    return SECTION_NAME;
+  public LibDefaults() {
+    super(SECTION_NAME);
   }
 }

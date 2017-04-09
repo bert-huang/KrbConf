@@ -1,13 +1,14 @@
 package com.cepw.model.node.section;
 
-public class AppDefaults extends Section {
+import com.cepw.model.node.SectionNode;
+
+public class AppDefaults extends SectionNode {
 
   private static final long serialVersionUID = -4586814915221769576L;
 
   public static final String SECTION_NAME = "appdefaults";
 
-  @Override
-  public String getSectionName() {
-    return SECTION_NAME;
+  public AppDefaults() {
+    super(SECTION_NAME);
   }
 }

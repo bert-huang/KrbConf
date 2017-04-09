@@ -1,8 +1,8 @@
 package com.cepw;
 
 import com.cepw.model.KrbConf;
-import com.cepw.model.node.value.MultiValueNode;
-import com.cepw.model.node.value.SingleValueNode;
+import com.cepw.model.node.ComplexKeyValuesNode;
+import com.cepw.model.node.SimpleKeyValuesNode;
 import com.cepw.utils.ObjectUtils;
 import java.io.File;
 
@@ -18,18 +18,18 @@ public class Example {
 
       System.out.println("=== New KrbConf ===");
       KrbConf newConf = new KrbConf();
-      newConf.getLibDefaults().add(new SingleValueNode("default_realm", "CEPW.CO.NZ"));
-      newConf.getDomainRealm().add(new SingleValueNode("cepw.co.nz", "CEPW.CO.NZ"));
-      newConf.getDomainRealm().add(new SingleValueNode("cepw.co.nz", "CEPW.CO.NZ"));
-      newConf.getRealms().add(new MultiValueNode("CEPW.CO.NZ",
-              new SingleValueNode("master_kdc", "cepw-alpha.domain.co.nz"),
-              new SingleValueNode("admin_server", "cepw-gamma.domain.co.nz"),
-              new SingleValueNode("kdc", "cepw-alpha.domain.co.nz"),
-              new SingleValueNode("kdc", "cpew-beta.domain.co.nz")));
+      newConf.getLibDefaults().add(new SimpleKeyValuesNode("default_realm", "CEPW.CO.NZ"));
+      newConf.getDomainRealm().add(new SimpleKeyValuesNode("cepw.co.nz", "CEPW.CO.NZ"));
+      newConf.getDomainRealm().add(new SimpleKeyValuesNode("cepw.co.nz", "CEPW.CO.NZ"));
+      newConf.getRealms().add(new ComplexKeyValuesNode("CEPW.CO.NZ",
+              new SimpleKeyValuesNode("master_kdc", "cepw-alpha.domain.co.nz"),
+              new SimpleKeyValuesNode("admin_server", "cepw-gamma.domain.co.nz"),
+              new SimpleKeyValuesNode("kdc", "cepw-alpha.domain.co.nz"),
+              new SimpleKeyValuesNode("kdc", "cpew-beta.domain.co.nz")));
 
-      newConf.getRealms().add(new MultiValueNode("CEPW.CO.NZ",
-              new SingleValueNode("kdc", "cpew-omega.domain.co.nz"),
-              new SingleValueNode("default_domain", "mit.edu")));
+      newConf.getRealms().add(new ComplexKeyValuesNode("CEPW.CO.NZ",
+              new SimpleKeyValuesNode("kdc", "cpew-omega.domain.co.nz"),
+              new SimpleKeyValuesNode("default_domain", "mit.edu")));
       newConf.getDomainRealm().remove("cepw.co.nz");
       System.out.println("Object Size: " + ObjectUtils.serialize(newConf).length);
       System.out.println(newConf);

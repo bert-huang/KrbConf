@@ -7,7 +7,7 @@ import com.cepw.model.node.section.LibDefaults;
 import com.cepw.model.node.section.Logging;
 import com.cepw.model.node.section.Login;
 import com.cepw.model.node.section.Realms;
-import com.cepw.model.node.section.Section;
+import com.cepw.model.node.SectionNode;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,7 +16,7 @@ public class KrbConf implements Serializable {
 
   private static final long serialVersionUID = 6282488388607321323L;
 
-  private Map<String, Section> sections;
+  private Map<String, SectionNode> sections;
 
   public KrbConf() {
     sections = new HashMap<>();
@@ -57,15 +57,15 @@ public class KrbConf implements Serializable {
     return (CAPaths) sections.get(CAPaths.SECTION_NAME);
   }
 
-  public Section getSection(String key) {
+  public SectionNode getSection(String key) {
     return sections.get(key);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    for (Map.Entry<String, Section> section : sections.entrySet()) {
-      sb.append(section.getValue().toString());
+    for (Map.Entry<String, SectionNode> section : sections.entrySet()) {
+      sb.append(section.getValue().print(0));
     }
     return sb.toString();
   }
