@@ -1,15 +1,20 @@
 package com.cepw.model;
 
+import com.cepw.model.node.SectionNode;
 import com.cepw.model.node.section.AppDefaultsSection;
 import com.cepw.model.node.section.CAPathsSection;
+import com.cepw.model.node.section.DbDefaultsSection;
+import com.cepw.model.node.section.DbModulesSection;
 import com.cepw.model.node.section.DomainRealmSection;
+import com.cepw.model.node.section.KdcDefaultsSection;
 import com.cepw.model.node.section.LibDefaultsSection;
 import com.cepw.model.node.section.LoggingSection;
 import com.cepw.model.node.section.LoginSection;
+import com.cepw.model.node.section.PluginsSection;
 import com.cepw.model.node.section.RealmsSection;
-import com.cepw.model.node.SectionNode;
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -22,6 +27,23 @@ public class KrbConf implements Serializable {
    */
   private static final long serialVersionUID = 6282488388607321323L;
 
+  private static Map<String, Class> sectionClasses;
+
+  static {
+    sectionClasses = new HashMap<>();
+    sectionClasses.put(LibDefaultsSection.SECTION_NAME ,AppDefaultsSection.class);
+    sectionClasses.put(CAPathsSection.SECTION_NAME     ,CAPathsSection.class);
+    sectionClasses.put(DbDefaultsSection.SECTION_NAME  ,DbDefaultsSection.class);
+    sectionClasses.put(DbModulesSection.SECTION_NAME   ,DbModulesSection.class);
+    sectionClasses.put(DomainRealmSection.SECTION_NAME ,DomainRealmSection.class);
+    sectionClasses.put(KdcDefaultsSection.SECTION_NAME ,KdcDefaultsSection.class);
+    sectionClasses.put(LibDefaultsSection.SECTION_NAME ,LibDefaultsSection.class);
+    sectionClasses.put(LoggingSection.SECTION_NAME     ,LoggingSection.class);
+    sectionClasses.put(LoginSection.SECTION_NAME       ,LoginSection.class);
+    sectionClasses.put(PluginsSection.SECTION_NAME     ,PluginsSection.class);
+    sectionClasses.put(RealmsSection.SECTION_NAME      ,RealmsSection.class);
+  }
+
   /**
    * The {@link SectionNode}s
    */
@@ -33,42 +55,56 @@ public class KrbConf implements Serializable {
    * Initialises all possible sections.
    */
   public KrbConf() {
-    sections = new HashMap<>();
-    sections.put(LibDefaultsSection.SECTION_NAME, new LibDefaultsSection());
-    sections.put(DomainRealmSection.SECTION_NAME, new DomainRealmSection());
-    sections.put(RealmsSection.SECTION_NAME, new RealmsSection());
-    sections.put(LoginSection.SECTION_NAME, new LoginSection());
-    sections.put(LoggingSection.SECTION_NAME, new LoggingSection());
-    sections.put(AppDefaultsSection.SECTION_NAME, new AppDefaultsSection());
-    sections.put(CAPathsSection.SECTION_NAME, new CAPathsSection());
+    sections = new LinkedHashMap<>();
   }
 
   /**
-   * @return the {@link LibDefaultsSection}
+   * @return the {@link AppDefaultsSection}
    */
-  public LibDefaultsSection getLibDefaults() {
-    return (LibDefaultsSection) sections.get(LibDefaultsSection.SECTION_NAME);
+  public AppDefaultsSection getAppDefaults() {
+    return getSection(AppDefaultsSection.SECTION_NAME);
+  }
+
+  /**
+   * @return the {@link CAPathsSection}
+   */
+  public CAPathsSection getCAPaths() {
+    return getSection(CAPathsSection.SECTION_NAME);
+  }
+
+  /**
+   * @return the {@link DbDefaultsSection}
+   */
+  public DbDefaultsSection getDbDefaults() {
+    return getSection(DbDefaultsSection.SECTION_NAME);
+  }
+
+  /**
+   * @return the {@link DbModulesSection}
+   */
+  public DbModulesSection getDbModules() {
+    return getSection(DbModulesSection.SECTION_NAME);
   }
 
   /**
    * @return the {@link DomainRealmSection}
    */
   public DomainRealmSection getDomainRealm() {
-    return (DomainRealmSection) sections.get(DomainRealmSection.SECTION_NAME);
+    return getSection(DomainRealmSection.SECTION_NAME);
   }
 
   /**
-   * @return the {@link RealmsSection}
+   * @return the {@link KdcDefaultsSection}
    */
-  public RealmsSection getRealms() {
-    return (RealmsSection) sections.get(RealmsSection.SECTION_NAME);
+  public KdcDefaultsSection getKdcDefaults() {
+    return getSection(KdcDefaultsSection.SECTION_NAME);
   }
 
   /**
-   * @return the {@link LoginSection}
+   * @return the {@link LibDefaultsSection}
    */
-  public LoginSection getLogin() {
-    return (LoginSection) sections.get(LoginSection.SECTION_NAME);
+  public LibDefaultsSection getLibDefaults() {
+    return getSection(LibDefaultsSection.SECTION_NAME);
   }
 
   /**
@@ -79,25 +115,52 @@ public class KrbConf implements Serializable {
   }
 
   /**
-   * @return the {@link AppDefaultsSection}
+   * @return the {@link LoginSection}
    */
-  public AppDefaultsSection getAppDefaults() {
-    return (AppDefaultsSection) sections.get(AppDefaultsSection.SECTION_NAME);
+  public LoginSection getLogin() {
+    return getSection(LoginSection.SECTION_NAME);
   }
 
   /**
-   * @return the {@link CAPathsSection}
+   * @return the {@link PluginsSection}
    */
-  public CAPathsSection getCAPaths() {
-    return (CAPathsSection) sections.get(CAPathsSection.SECTION_NAME);
+  public PluginsSection getPlugins() {
+    return getSection(PluginsSection.SECTION_NAME);
   }
 
   /**
+   * @return the {@link RealmsSection}
+   */
+  public RealmsSection getRealms() {
+    return getSection(RealmsSection.SECTION_NAME);
+  }
+
+  /**
+   * Create a {@link SectionNode} with the given sub {@link Class}.
+   *
+   * @param key the type of {@link SectionNode} to create.
+   * @param <T> the sub class of {@link SectionNode}
    * @return the {@link SectionNode} with the given key.
    * Null if an invalid key for the {@link SectionNode} is specified.
    */
-  public SectionNode getSection(String key) {
-    return sections.get(key);
+  public <T extends SectionNode> T getSection(String key) {
+
+    try {
+      Class<T> clazz = sectionClasses.get(key);
+      SectionNode section = sections.get(key);
+
+      if (clazz != null) {
+        if (section == null) {
+          section = clazz.newInstance();
+          sections.put(key, section);
+        }
+        return clazz.cast(section);
+      }
+    }
+    catch (InstantiationException | IllegalAccessException e) {
+      /* Nothing we can do. */
+    }
+    return null;
   }
 
   @Override

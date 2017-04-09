@@ -89,7 +89,7 @@ public class SimpleKeyValuesNode extends KeyValueNode {
   @Override
   public String toString(int indent) {
     StringBuilder sb = new StringBuilder();
-    sb.append(StringUtils.repeat(INDENT_CHARACTER, indent));
+    sb.append(StringUtils.repeat(INDENT_CHARACTERS, indent));
     sb.append(this.getKey());
     sb.append(" =");
     for (String value : values) {

@@ -24,4 +24,9 @@ public class CAPathsSection extends SectionNode {
   public CAPathsSection() {
     super(SECTION_NAME);
   }
+
+  @Override
+  public String getSectionName() {
+    return SECTION_NAME;
+  }
 }

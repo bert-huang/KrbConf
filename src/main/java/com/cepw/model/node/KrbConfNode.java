@@ -17,7 +17,7 @@ public abstract class KrbConfNode implements Serializable {
    * The character used for indentation when outputting this {@link KrbConfNode}
    * as {@link String}
    */
-  public static final String INDENT_CHARACTER = "\t";
+  public static final String INDENT_CHARACTERS = "  "; /* 2 spaces */
 
   /**
    * The key of the node.

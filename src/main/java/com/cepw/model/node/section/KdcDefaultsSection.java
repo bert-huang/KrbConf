@@ -3,25 +3,24 @@ package com.cepw.model.node.section;
 import com.cepw.model.node.SectionNode;
 
 /**
- * The class representing the [domain_realm] section.
+ * The class representing the [kdcdefaults] section.
  * Section specific logic goes here.
  */
-public class DomainRealmSection extends SectionNode {
+public class KdcDefaultsSection extends SectionNode {
 
   /**
    * The {@code serialVersionUID}
    */
-  private static final long serialVersionUID = -5972912363955939910L;
-
+  private static final long serialVersionUID = 4132718916086399300L;
   /**
    * The section name.
    */
-  public static final String SECTION_NAME = "domain_realm";
+  public static final String SECTION_NAME = "kdcdefaults";
 
   /**
    * Constructor.
    */
-  public DomainRealmSection() {
+  public KdcDefaultsSection() {
     super(SECTION_NAME);
   }
 

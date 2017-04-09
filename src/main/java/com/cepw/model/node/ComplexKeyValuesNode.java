@@ -153,7 +153,7 @@ public class ComplexKeyValuesNode extends KeyValueNode {
     indent = indent < 0 ? 0 : indent;
 
     StringBuilder sb = new StringBuilder();
-    sb.append(StringUtils.repeat(INDENT_CHARACTER, indent));
+    sb.append(StringUtils.repeat(INDENT_CHARACTERS, indent));
     sb.append(this.getKey());
     sb.append(" = {").append("\n");
     for (Map.Entry<String, List<SimpleKeyValuesNode>> node : this.simpleKeyValuesNodes.entrySet()) {
@@ -161,7 +161,7 @@ public class ComplexKeyValuesNode extends KeyValueNode {
         sb.append(svn.toString(indent+1));
       }
     }
-    sb.append(StringUtils.repeat(INDENT_CHARACTER, indent));
+    sb.append(StringUtils.repeat(INDENT_CHARACTERS, indent));
     sb.append("}").append("\n");
 
     return sb.toString();

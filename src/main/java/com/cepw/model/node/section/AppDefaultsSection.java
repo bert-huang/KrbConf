@@ -24,4 +24,9 @@ public class AppDefaultsSection extends SectionNode {
   public AppDefaultsSection() {
     super(SECTION_NAME);
   }
+
+  @Override
+  public String getSectionName() {
+    return SECTION_NAME;
+  }
 }

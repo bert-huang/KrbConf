@@ -3,25 +3,25 @@ package com.cepw.model.node.section;
 import com.cepw.model.node.SectionNode;
 
 /**
- * The class representing the [domain_realm] section.
+ * The class representing the [dbmodules] section.
  * Section specific logic goes here.
  */
-public class DomainRealmSection extends SectionNode {
+public class DbModulesSection extends SectionNode {
 
   /**
    * The {@code serialVersionUID}
    */
-  private static final long serialVersionUID = -5972912363955939910L;
+  private static final long serialVersionUID = -5448790636775131416L;
 
   /**
    * The section name.
    */
-  public static final String SECTION_NAME = "domain_realm";
+  public static final String SECTION_NAME = "dbmodules";
 
   /**
    * Constructor.
    */
-  public DomainRealmSection() {
+  public DbModulesSection() {
     super(SECTION_NAME);
   }
 

@@ -11,7 +11,7 @@ import java.util.Map;
  * A {@link SectionNode} can hold multiple {@link SimpleKeyValuesNode}s and
  * multiple {@link ComplexKeyValuesNode}s.
  */
-public class SectionNode extends KrbConfNode {
+public abstract class SectionNode extends KrbConfNode {
 
   /**
    * The {@code serialVersionUID}
@@ -132,22 +132,30 @@ public class SectionNode extends KrbConfNode {
     return this.simpleKeyValuesNodes.isEmpty() && this.complexKeyValuesNodes.isEmpty();
   }
 
+  /**
+   * @return the section's name
+   */
+  public abstract String getSectionName();
+
   @Override
   public String toString(int indent) {
     StringBuilder sb = new StringBuilder();
-    sb.append(StringUtils.repeat(INDENT_CHARACTER, indent));
-    sb.append("[").append(this.getKey()).append("]").append("\n");
 
-    for (Map.Entry<String, List<SimpleKeyValuesNode>> svns : this.simpleKeyValuesNodes.entrySet()) {
-      for (SimpleKeyValuesNode svn : svns.getValue()) {
-        sb.append(svn.toString(indent + 1));
+    if (!isEmpty()) {
+      sb.append(StringUtils.repeat(INDENT_CHARACTERS, indent));
+      sb.append("[").append(this.getKey()).append("]").append("\n");
+
+      for (Map.Entry<String, List<SimpleKeyValuesNode>> svns : this.simpleKeyValuesNodes.entrySet()) {
+        for (SimpleKeyValuesNode svn : svns.getValue()) {
+          sb.append(svn.toString(indent + 1));
+        }
       }
-    }
 
-    for (Map.Entry<String, ComplexKeyValuesNode> mvns : this.complexKeyValuesNodes.entrySet()) {
-      sb.append(mvns.getValue().toString(indent + 1));
+      for (Map.Entry<String, ComplexKeyValuesNode> mvns : this.complexKeyValuesNodes.entrySet()) {
+        sb.append(mvns.getValue().toString(indent + 1));
+      }
+      sb.append("\n");
     }
-    sb.append("\n");
     return sb.toString();
   }
 }
