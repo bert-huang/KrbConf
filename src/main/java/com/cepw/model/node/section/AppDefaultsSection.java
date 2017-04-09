@@ -11,7 +11,7 @@ public class AppDefaultsSection extends SectionNode {
   /**
    * The section name.
    */
-  public static final String SECTION_NAME = "appdefaults";
+  public static final String KEY = "appdefaults";
   /**
    * The {@code serialVersionUID}
    */
@@ -21,6 +21,6 @@ public class AppDefaultsSection extends SectionNode {
    * Constructor.
    */
   public AppDefaultsSection() {
-    super(SECTION_NAME);
+    super(KEY);
   }
 }
