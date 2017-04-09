@@ -9,24 +9,18 @@ import com.cepw.model.node.SectionNode;
 public class LoggingSection extends SectionNode {
 
   /**
+   * The section name.
+   */
+  public static final String KEY = "logging";
+  /**
    * The {@code serialVersionUID}
    */
   private static final long serialVersionUID = 2011330182756433131L;
 
   /**
-   * The section name.
-   */
-  public static final String SECTION_NAME = "logging";
-
-  /**
    * Constructor.
    */
   public LoggingSection() {
-    super(SECTION_NAME);
-  }
-
-  @Override
-  public String getSectionName() {
-    return SECTION_NAME;
+    super(KEY);
   }
 }

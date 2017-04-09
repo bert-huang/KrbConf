@@ -9,16 +9,14 @@ import java.io.Serializable;
 public abstract class KrbConfNode implements Serializable {
 
   /**
-   * The {@code serialVersionUID}
-   */
-  private static final long serialVersionUID = -4871360033178840759L;
-
-  /**
    * The character used for indentation when outputting this {@link KrbConfNode}
    * as {@link String}
    */
-  public static final String INDENT_CHARACTERS = "  "; /* 2 spaces */
-
+  protected static final String INDENT_CHARACTERS = "  "; /* 2 spaces */
+  /**
+   * The {@code serialVersionUID}
+   */
+  private static final long serialVersionUID = -4871360033178840759L;
   /**
    * The key of the node.
    */

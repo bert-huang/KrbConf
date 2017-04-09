@@ -9,24 +9,18 @@ import com.cepw.model.node.SectionNode;
 public class LoginSection extends SectionNode {
 
   /**
+   * The section name.
+   */
+  public static final String KEY = "login";
+  /**
    * The {@code serialVersionUID}
    */
   private static final long serialVersionUID = -7795233329451152953L;
 
   /**
-   * The section name.
-   */
-  public static final String SECTION_NAME = "login";
-
-  /**
    * Constructor.
    */
   public LoginSection() {
-    super(SECTION_NAME);
-  }
-
-  @Override
-  public String getSectionName() {
-    return SECTION_NAME;
+    super(KEY);
   }
 }

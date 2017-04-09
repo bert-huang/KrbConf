@@ -22,16 +22,16 @@ public class ComplexKeyValuesNode extends KeyValueNode {
    * A {@link List} is required as krb.conf can have multiple {@link SimpleKeyValuesNode}s
    * with the same key but different values.
    * e.g.
-   *      kdc = kerberos.mit.edu
-   *      kdc = kerberos-1.mit.edu
-   *      kdc = kerberos-2.mit.edu:750
+   * kdc = kerberos.mit.edu
+   * kdc = kerberos-1.mit.edu
+   * kdc = kerberos-2.mit.edu:750
    */
   private Map<String, List<SimpleKeyValuesNode>> simpleKeyValuesNodes;
 
   /**
    * Constructor.
    *
-   * @param key the key of the node.
+   * @param key   the key of the node.
    * @param nodes the array of {@link SimpleKeyValuesNode}s.
    */
   public ComplexKeyValuesNode(String key, SimpleKeyValuesNode... nodes) {
@@ -54,7 +54,7 @@ public class ComplexKeyValuesNode extends KeyValueNode {
   /**
    * Constructor.
    *
-   * @param key the key of the node.
+   * @param key   the key of the node.
    * @param nodes the {@link List} of {@link SimpleKeyValuesNode}s.
    */
   public ComplexKeyValuesNode(String key, List<SimpleKeyValuesNode> nodes) {
@@ -73,8 +73,7 @@ public class ComplexKeyValuesNode extends KeyValueNode {
       List<SimpleKeyValuesNode> nodes = new ArrayList<>();
       nodes.add(node);
       this.simpleKeyValuesNodes.put(node.getKey(), nodes);
-    }
-    else {
+    } else {
       existingNodes.add(node);
     }
     return node;
@@ -93,8 +92,7 @@ public class ComplexKeyValuesNode extends KeyValueNode {
       List<SimpleKeyValuesNode> existingNodes = this.simpleKeyValuesNodes.get(singleValueNodes.getKey());
       if (existingNodes == null) {
         this.simpleKeyValuesNodes.put(singleValueNodes.getKey(), singleValueNodes.getValue());
-      }
-      else {
+      } else {
         existingNodes.addAll(singleValueNodes.getValue());
       }
     }
@@ -158,7 +156,7 @@ public class ComplexKeyValuesNode extends KeyValueNode {
     sb.append(" = {").append("\n");
     for (Map.Entry<String, List<SimpleKeyValuesNode>> node : this.simpleKeyValuesNodes.entrySet()) {
       for (SimpleKeyValuesNode svn : node.getValue()) {
-        sb.append(svn.toString(indent+1));
+        sb.append(svn.toString(indent + 1));
       }
     }
     sb.append(StringUtils.repeat(INDENT_CHARACTERS, indent));

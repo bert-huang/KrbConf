@@ -87,7 +87,7 @@ public class KrbConfParser {
           }
 
           String sectionName = matcher.group(1).trim();
-          SectionNode section = krbConf.getSection(sectionName);
+          SectionNode section = krbConf.getSection(KrbConf.SECTION_CLASSES.get(sectionName));
           if (section == null) {
             String errorMsg = "Unknown section " + sectionName + " at line: " + lr.getLineNumber();
             throw new KrbConfParseException(errorMsg);
@@ -111,8 +111,7 @@ public class KrbConfParser {
           KrbConfNode node = nodeStack.isEmpty() ? null : nodeStack.peek();
           if (node instanceof SectionNode) {
             ((SectionNode) node).add(svn);
-          }
-          else if (node instanceof ComplexKeyValuesNode) {
+          } else if (node instanceof ComplexKeyValuesNode) {
             ((ComplexKeyValuesNode) node).add(svn);
           }
           continue;
@@ -127,8 +126,7 @@ public class KrbConfParser {
             ComplexKeyValuesNode mvn = new ComplexKeyValuesNode(key);
             ((SectionNode) node).add(mvn);
             nodeStack.push(mvn);
-          }
-          else {
+          } else {
             String errorMsg = "Unsupported complex key-value nesting at line: " + lr.getLineNumber();
             throw new KrbConfParseException(errorMsg);
           }
@@ -145,11 +143,9 @@ public class KrbConfParser {
         throw new KrbConfParseException("Invalid value at line: " + lr.getLineNumber());
       }
       return krbConf;
-    }
-    catch (KrbConfParseException e) {
+    } catch (KrbConfParseException e) {
       throw e;
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       throw new KrbConfParseException(e);
     }
   }

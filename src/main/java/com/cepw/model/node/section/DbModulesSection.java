@@ -9,24 +9,18 @@ import com.cepw.model.node.SectionNode;
 public class DbModulesSection extends SectionNode {
 
   /**
+   * The section name.
+   */
+  public static final String KEY = "dbmodules";
+  /**
    * The {@code serialVersionUID}
    */
   private static final long serialVersionUID = -5448790636775131416L;
 
   /**
-   * The section name.
-   */
-  public static final String SECTION_NAME = "dbmodules";
-
-  /**
    * Constructor.
    */
   public DbModulesSection() {
-    super(SECTION_NAME);
-  }
-
-  @Override
-  public String getSectionName() {
-    return SECTION_NAME;
+    super(KEY);
   }
 }

@@ -9,24 +9,18 @@ import com.cepw.model.node.SectionNode;
 public class PluginsSection extends SectionNode {
 
   /**
+   * The section name.
+   */
+  public static final String KEY = "plugins";
+  /**
    * The {@code serialVersionUID}
    */
   private static final long serialVersionUID = -226192210700314882L;
 
   /**
-   * The section name.
-   */
-  public static final String SECTION_NAME = "plugins";
-
-  /**
    * Constructor.
    */
   public PluginsSection() {
-    super(SECTION_NAME);
-  }
-
-  @Override
-  public String getSectionName() {
-    return SECTION_NAME;
+    super(KEY);
   }
 }

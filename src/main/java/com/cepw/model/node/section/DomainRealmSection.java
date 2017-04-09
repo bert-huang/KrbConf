@@ -9,24 +9,18 @@ import com.cepw.model.node.SectionNode;
 public class DomainRealmSection extends SectionNode {
 
   /**
+   * The section name.
+   */
+  public static final String KEY = "domain_realm";
+  /**
    * The {@code serialVersionUID}
    */
   private static final long serialVersionUID = -5972912363955939910L;
 
   /**
-   * The section name.
-   */
-  public static final String SECTION_NAME = "domain_realm";
-
-  /**
    * Constructor.
    */
   public DomainRealmSection() {
-    super(SECTION_NAME);
-  }
-
-  @Override
-  public String getSectionName() {
-    return SECTION_NAME;
+    super(KEY);
   }
 }

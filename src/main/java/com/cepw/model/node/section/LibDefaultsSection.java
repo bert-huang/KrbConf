@@ -9,24 +9,18 @@ import com.cepw.model.node.SectionNode;
 public class LibDefaultsSection extends SectionNode {
 
   /**
+   * The section name.
+   */
+  public static final String KEY = "libdefaults";
+  /**
    * The {@code serialVersionUID}
    */
   private static final long serialVersionUID = -2294810939675626670L;
 
   /**
-   * The section name.
-   */
-  public static final String SECTION_NAME = "libdefaults";
-
-  /**
    * Constructor.
    */
   public LibDefaultsSection() {
-    super(SECTION_NAME);
-  }
-
-  @Override
-  public String getSectionName() {
-    return SECTION_NAME;
+    super(KEY);
   }
 }

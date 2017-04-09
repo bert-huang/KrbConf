@@ -25,14 +25,14 @@ public class SimpleKeyValuesNode extends KeyValueNode {
   /**
    * Constructor.
    *
-   * @param key the key of the node.
+   * @param key   the key of the node.
    * @param vargs the array of values.
    */
   public SimpleKeyValuesNode(String key, String... vargs) {
     super(key);
     List<String> values = new ArrayList<>();
     if (vargs != null) {
-      for(String value : vargs) {
+      for (String value : vargs) {
         values.add(value.trim());
       }
     }
@@ -42,7 +42,7 @@ public class SimpleKeyValuesNode extends KeyValueNode {
   /**
    * Constructor.
    *
-   * @param key the key of the node.
+   * @param key    the key of the node.
    * @param values the {@link List} of values.
    */
   public SimpleKeyValuesNode(String key, List<String> values) {

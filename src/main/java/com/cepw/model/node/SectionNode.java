@@ -11,7 +11,7 @@ import java.util.Map;
  * A {@link SectionNode} can hold multiple {@link SimpleKeyValuesNode}s and
  * multiple {@link ComplexKeyValuesNode}s.
  */
-public abstract class SectionNode extends KrbConfNode {
+public abstract class SectionNode<T> extends KrbConfNode {
 
   /**
    * The {@code serialVersionUID}
@@ -51,8 +51,7 @@ public abstract class SectionNode extends KrbConfNode {
       List<SimpleKeyValuesNode> nodes = new ArrayList<>();
       nodes.add(node);
       this.simpleKeyValuesNodes.put(node.getKey(), nodes);
-    }
-    else {
+    } else {
       existingNodes.add(node);
     }
     return node;
@@ -68,8 +67,7 @@ public abstract class SectionNode extends KrbConfNode {
     ComplexKeyValuesNode existingNode = this.complexKeyValuesNodes.get(node.getKey());
     if (existingNode == null) {
       this.complexKeyValuesNodes.put(node.getKey(), node);
-    }
-    else {
+    } else {
       existingNode.merge(node);
     }
     return node;
@@ -100,12 +98,12 @@ public abstract class SectionNode extends KrbConfNode {
    * Returns the {@link KeyValueNode} with the given key.
    * This will return either {@link SimpleKeyValuesNode} or
    * {@link ComplexKeyValuesNode} depend on the specified {@link Class}.
-   *
+   * <p>
    * Return null if no {@link KeyValueNode} with the given key is found.
    *
-   * @param key the key.
+   * @param key   the key.
    * @param clazz the actual type of the {@link KeyValueNode}.
-   * @param <T> sub type for {@link KeyValueNode}
+   * @param <T>   sub type for {@link KeyValueNode}
    * @return the {@link KeyValueNode} with the given key. Null if it does not exist.
    */
   public <T extends KeyValueNode> T get(String key, Class<T> clazz) {
@@ -118,8 +116,7 @@ public abstract class SectionNode extends KrbConfNode {
         }
         return clazz.cast(new SimpleKeyValuesNode(key, values));
       }
-    }
-    else if (ComplexKeyValuesNode.class.equals(clazz)) {
+    } else if (ComplexKeyValuesNode.class.equals(clazz)) {
       return clazz.cast(this.complexKeyValuesNodes.get(key));
     }
     return null;
@@ -131,11 +128,6 @@ public abstract class SectionNode extends KrbConfNode {
   public boolean isEmpty() {
     return this.simpleKeyValuesNodes.isEmpty() && this.complexKeyValuesNodes.isEmpty();
   }
-
-  /**
-   * @return the section's name
-   */
-  public abstract String getSectionName();
 
   @Override
   public String toString(int indent) {
