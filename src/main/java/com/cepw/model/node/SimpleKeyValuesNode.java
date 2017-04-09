@@ -77,6 +77,20 @@ public class SimpleKeyValuesNode extends KeyValueNode {
   }
 
   /**
+   * @return the {@link List} of values of the node
+   */
+  public List<String> getValues() {
+    return values;
+  }
+
+  /**
+   * @return the {@link List} of space separated values in {@link String}s
+   */
+  public String getValuesAsString() {
+    return StringUtils.join(values, " ");
+  }
+
+  /**
    * Returns the underlying ADT holding the information about
    * this node.
    *

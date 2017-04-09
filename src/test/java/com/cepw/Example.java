@@ -31,7 +31,6 @@ public class Example {
               new SimpleKeyValuesNode("kdc", "cpew-omega.domain.co.nz"),
               new SimpleKeyValuesNode("default_domain", "mit.edu")));
       newConf.getDomainRealm().remove("cepw.co.nz");
-      System.out.println(newConf.getRealms().get("CEPW.CO.NZ", ComplexKeyValuesNode.class));
       System.out.println("Object Size: " + ObjectUtils.serialize(newConf).length);
       System.out.println(newConf);
       System.out.println();
