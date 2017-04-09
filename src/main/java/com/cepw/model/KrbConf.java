@@ -23,11 +23,16 @@ import java.util.Map;
  */
 public class KrbConf implements Serializable {
 
-  public static final Map<String, Class<? extends SectionNode>> SECTION_CLASSES;
+
   /**
    * The {@code serialVersionUID}
    */
   private static final long serialVersionUID = 6282488388607321323L;
+
+  /**
+   * A {@link Map} holding all possible {@link SectionNode} and the corresponding {@link Class}.
+   */
+  public static final Map<String, Class<? extends SectionNode>> SECTION_CLASSES;
 
   static {
     Map<String, Class<? extends SectionNode>> sections = new HashMap<>();
