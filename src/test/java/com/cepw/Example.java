@@ -44,7 +44,7 @@ public class Example {
       System.out.println(conf);
       System.out.println("---");
 
-      File outputFile = new File("doge.conf");
+      File outputFile = new File("output.conf");
       BufferedWriter out = new BufferedWriter(new FileWriter(outputFile));
       out.write(conf.toString());
       out.close();
