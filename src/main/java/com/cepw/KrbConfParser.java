@@ -96,7 +96,7 @@ public class KrbConfParser {
           continue;
         }
         if (nodeStack.isEmpty()) {
-          String errorMsg = "key-value definition before section at line: " + lr.getLineNumber();
+          String errorMsg = "Key-value definition before section at line: " + lr.getLineNumber();
           throw new KrbConfParseException(errorMsg);
         }
 
@@ -105,14 +105,14 @@ public class KrbConfParser {
         if (matcher.matches()) {
           String key = matcher.group(1).trim();
           String val = matcher.group(2).trim();
-          String[] vals = val.replaceAll("\\s+", " ").split("\\s");
-          SimpleKeyValuesNode svn = new SimpleKeyValuesNode(key, vals);
+          String[] splits = val.replaceAll("\\s+", " ").split("\\s");
+          SimpleKeyValuesNode simpleNode = new SimpleKeyValuesNode(key, splits);
 
           KrbConfNode node = nodeStack.isEmpty() ? null : nodeStack.peek();
           if (node instanceof SectionNode) {
-            ((SectionNode) node).add(svn);
+            ((SectionNode) node).add(simpleNode);
           } else if (node instanceof ComplexKeyValuesNode) {
-            ((ComplexKeyValuesNode) node).add(svn);
+            ((ComplexKeyValuesNode) node).add(simpleNode);
           }
           continue;
         }
@@ -123,9 +123,8 @@ public class KrbConfParser {
           String key = matcher.group(1).trim();
           KrbConfNode node = nodeStack.isEmpty() ? null : nodeStack.peek();
           if (node instanceof SectionNode) {
-            ComplexKeyValuesNode mvn = new ComplexKeyValuesNode(key);
-            ((SectionNode) node).add(mvn);
-            nodeStack.push(mvn);
+            ComplexKeyValuesNode complexNode = new ComplexKeyValuesNode(key);
+            nodeStack.push(complexNode);
           } else {
             String errorMsg = "Unsupported complex key-value nesting at line: " + lr.getLineNumber();
             throw new KrbConfParseException(errorMsg);
@@ -136,10 +135,13 @@ public class KrbConfParser {
         /* 4. Complex key-value node END */
         matcher = COMPLEX_KEY_VALUES_END_PATTERN.matcher(line);
         if (matcher.matches()) {
-          nodeStack.pop();
+          ComplexKeyValuesNode complexNode = nodeStack.isEmpty() ? null : (ComplexKeyValuesNode) nodeStack.pop();
+          SectionNode sectionNode = nodeStack.isEmpty() ? null : (SectionNode) nodeStack.peek();
+          if (sectionNode != null) {
+            sectionNode.add(complexNode);
+          }
           continue;
         }
-
         throw new KrbConfParseException("Invalid value at line: " + lr.getLineNumber());
       }
       return krbConf;

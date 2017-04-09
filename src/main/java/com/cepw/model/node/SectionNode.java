@@ -3,6 +3,7 @@ package com.cepw.model.node;
 import com.cepw.utils.StringUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -35,8 +36,8 @@ public abstract class SectionNode extends KrbConfNode {
    */
   public SectionNode(String key) {
     super(key);
-    this.simpleKeyValuesNodes = new HashMap<>();
-    this.complexKeyValuesNodes = new HashMap<>();
+    this.simpleKeyValuesNodes = new LinkedHashMap<>();
+    this.complexKeyValuesNodes = new LinkedHashMap<>();
   }
 
   /**

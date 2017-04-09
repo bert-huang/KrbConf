@@ -3,6 +3,7 @@ package com.cepw.model.node;
 import com.cepw.utils.StringUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -36,7 +37,7 @@ public class ComplexKeyValuesNode extends KeyValueNode {
    */
   public ComplexKeyValuesNode(String key, SimpleKeyValuesNode... nodes) {
     super(key);
-    this.simpleKeyValuesNodes = new HashMap<>();
+    this.simpleKeyValuesNodes = new LinkedHashMap<>();
     if (nodes != null) {
       for (SimpleKeyValuesNode node : nodes) {
         List<SimpleKeyValuesNode> existingNodes = this.simpleKeyValuesNodes.get(node.getKey());

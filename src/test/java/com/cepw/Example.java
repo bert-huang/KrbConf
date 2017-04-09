@@ -3,8 +3,11 @@ package com.cepw;
 import com.cepw.model.KrbConf;
 import com.cepw.model.node.ComplexKeyValuesNode;
 import com.cepw.model.node.SimpleKeyValuesNode;
+import com.cepw.model.node.section.RealmsSection;
 import com.cepw.utils.ObjectUtils;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 
 public class Example {
 
@@ -41,6 +44,11 @@ public class Example {
       System.out.println("Object Size: " + ObjectUtils.serialize(conf).length);
       System.out.println(conf);
       System.out.println("---");
+
+      File outputFile = new File("doge.conf");
+      BufferedWriter out = new BufferedWriter(new FileWriter(outputFile));
+      out.write(conf.toString());
+      out.close();
     }
     catch (Exception e) {
       e.printStackTrace();
