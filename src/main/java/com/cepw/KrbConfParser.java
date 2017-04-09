@@ -145,9 +145,11 @@ public class KrbConfParser {
         throw new KrbConfParseException("Invalid value at line: " + lr.getLineNumber());
       }
       return krbConf;
-    } catch (KrbConfParseException e) {
+    }
+    catch (KrbConfParseException e) {
       throw e;
-    } catch (Exception e) {
+    }
+    catch (Exception e) {
       throw new KrbConfParseException(e);
     }
   }

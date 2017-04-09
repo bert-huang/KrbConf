@@ -10,7 +10,7 @@ public class StringUtils {
   /**
    * Repeats a {@link String} by the given number of times.
    *
-   * @param s the {@link String} to repeat
+   * @param s     the {@link String} to repeat
    * @param count number of times to repeat
    * @return the repeated {@link String}
    */
@@ -21,7 +21,7 @@ public class StringUtils {
   /**
    * Join a given {@link List} of {@link String}s, separated by a given delimiter.
    *
-   * @param values the {@link List} of {@link String}s to join.
+   * @param values    the {@link List} of {@link String}s to join.
    * @param delimiter the delimiter
    * @return the joined {@link String}
    */
@@ -29,7 +29,7 @@ public class StringUtils {
     StringBuilder sb = new StringBuilder();
     if (values != null && !values.isEmpty()) {
       sb.append(values.get(0));
-      for(int i = 1; i < values.size(); i++) {
+      for (int i = 1; i < values.size(); i++) {
         sb.append(delimiter);
         sb.append(values.get(i));
       }
