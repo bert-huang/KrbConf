@@ -9,7 +9,7 @@ import com.cepw.utils.StringUtils;
  * A node representing a simple key-value entry.
  * A simple key-value node can hold multiple {@link String} values.
  */
-public class SimpleKeyValuesNode extends KeyValueNode {
+public class SimpleKeyValuesNode extends KeyValuesNode {
 
   /**
    * The {@code serialVersionUID}
@@ -21,7 +21,7 @@ public class SimpleKeyValuesNode extends KeyValueNode {
    * krb.conf simple key value can be in space separated values.
    * This {@link List} is used to store each individual value.
    */
-  private List<String> values;
+  protected List<String> values;
 
   /**
    * Constructor.
@@ -102,7 +102,7 @@ public class SimpleKeyValuesNode extends KeyValueNode {
   }
 
   @Override
-  public String toString(int indent) {
+  public String asString(int indent) {
     StringBuilder sb = new StringBuilder();
     sb.append(StringUtils.repeat(INDENT_CHARACTERS, indent));
     sb.append(this.getKey());

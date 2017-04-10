@@ -172,7 +172,7 @@ public class KrbConf implements Serializable {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     for (SectionNode section : sections.values()) {
-      sb.append(section.toString(0));
+      sb.append(section.asString(0));
     }
     return sb.toString();
   }

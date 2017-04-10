@@ -78,7 +78,7 @@ public class KrbConfParser {
         if (matcher.matches()) {
 
           KrbConfNode node = nodeStack.isEmpty() ? null : nodeStack.peek();
-          if (node instanceof ComplexKeyValuesNode) {
+          if (node != null && !(node instanceof SectionNode)) {
             String errorMsg = "Complex key-value not closed at line: " + lr.getLineNumber();
             throw new KrbConfParseException(errorMsg);
           }
@@ -123,12 +123,9 @@ public class KrbConfParser {
         if (matcher.matches()) {
           String key = matcher.group(1).trim();
           KrbConfNode node = nodeStack.isEmpty() ? null : nodeStack.peek();
-          if (node instanceof SectionNode) {
+          if (node != null) {
             ComplexKeyValuesNode complexNode = new ComplexKeyValuesNode(key);
             nodeStack.push(complexNode);
-          } else {
-            String errorMsg = "Unsupported complex key-value nesting at line: " + lr.getLineNumber();
-            throw new KrbConfParseException(errorMsg);
           }
           continue;
         }
@@ -136,10 +133,10 @@ public class KrbConfParser {
         /* 4. Complex key-value node END */
         matcher = COMPLEX_KEY_VALUES_END_PATTERN.matcher(line);
         if (matcher.matches()) {
-          ComplexKeyValuesNode complexNode = nodeStack.isEmpty() ? null : (ComplexKeyValuesNode) nodeStack.pop();
-          SectionNode sectionNode = nodeStack.isEmpty() ? null : (SectionNode) nodeStack.peek();
-          if (sectionNode != null) {
-            sectionNode.add(complexNode);
+          ComplexKeyValuesNode innerNode = nodeStack.isEmpty() ? null : (ComplexKeyValuesNode) nodeStack.pop();
+          ComplexKeyValuesNode outerNode = nodeStack.isEmpty() ? null : (ComplexKeyValuesNode) nodeStack.peek();
+          if (outerNode != null) {
+            outerNode.add(innerNode);
           }
           continue;
         }

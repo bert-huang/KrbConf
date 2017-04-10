@@ -1,17 +1,19 @@
 package com.cepw.model.node;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.cepw.utils.StringUtils;
+import java.util.Set;
 
 /**
  * A node representing a complex key-value entry.
  * A {@link ComplexKeyValuesNode} can hold multiple {@link SimpleKeyValuesNode}s.
  */
-public class ComplexKeyValuesNode extends KeyValueNode {
+public class ComplexKeyValuesNode extends KeyValuesNode {
 
   /**
    * The {@code serialVersionUID}
@@ -27,7 +29,23 @@ public class ComplexKeyValuesNode extends KeyValueNode {
    * kdc = kerberos-1.mit.edu
    * kdc = kerberos-2.mit.edu:750
    */
-  private Map<String, List<SimpleKeyValuesNode>> simpleKeyValuesNodes;
+  protected Map<String, List<SimpleKeyValuesNode>> simpleKeyValuesNodes;
+
+  /**
+   * The {@link Map} holding all {@link ComplexKeyValuesNode}s
+   */
+  protected Map<String, ComplexKeyValuesNode> complexKeyValuesNodes;
+
+  /**
+   * Constructor.
+   *
+   * @param key   the key of the node.
+   */
+  public ComplexKeyValuesNode(String key) {
+    super(key);
+    this.simpleKeyValuesNodes = new LinkedHashMap<String, List<SimpleKeyValuesNode>>();
+    this.complexKeyValuesNodes = new LinkedHashMap<String, ComplexKeyValuesNode>();
+  }
 
   /**
    * Constructor.
@@ -35,18 +53,19 @@ public class ComplexKeyValuesNode extends KeyValueNode {
    * @param key   the key of the node.
    * @param nodes the array of {@link SimpleKeyValuesNode}s.
    */
-  public ComplexKeyValuesNode(String key, SimpleKeyValuesNode... nodes) {
+  public ComplexKeyValuesNode(String key, KeyValuesNode... nodes) {
     super(key);
     this.simpleKeyValuesNodes = new LinkedHashMap<String, List<SimpleKeyValuesNode>>();
+    this.complexKeyValuesNodes = new LinkedHashMap<String, ComplexKeyValuesNode>();
     if (nodes != null) {
-      for (SimpleKeyValuesNode node : nodes) {
-        List<SimpleKeyValuesNode> existingNodes = this.simpleKeyValuesNodes.get(node.getKey());
-        if (existingNodes == null) {
-          existingNodes = new ArrayList<SimpleKeyValuesNode>();
-          existingNodes.add(node);
-          this.simpleKeyValuesNodes.put(node.getKey(), existingNodes);
-        } else {
-          existingNodes.add(node);
+      for (KeyValuesNode node : nodes) {
+        if (node instanceof SimpleKeyValuesNode) {
+          SimpleKeyValuesNode simpleNode = (SimpleKeyValuesNode) node;
+          add(simpleNode);
+        }
+        else if (node instanceof ComplexKeyValuesNode) {
+          ComplexKeyValuesNode complexNode = (ComplexKeyValuesNode) node;
+          add(complexNode);
         }
       }
     }
@@ -69,13 +88,30 @@ public class ComplexKeyValuesNode extends KeyValueNode {
    * @return the added {@link SimpleKeyValuesNode}
    */
   public SimpleKeyValuesNode add(SimpleKeyValuesNode node) {
-    List<SimpleKeyValuesNode> existingNodes = this.simpleKeyValuesNodes.get(node.getKey());
-    if (existingNodes == null) {
-      List<SimpleKeyValuesNode> nodes = new ArrayList<SimpleKeyValuesNode>();
-      nodes.add(node);
-      this.simpleKeyValuesNodes.put(node.getKey(), nodes);
-    } else {
-      existingNodes.add(node);
+
+    if (node != null) {
+      this.complexKeyValuesNodes.remove(node.getKey());
+      List<SimpleKeyValuesNode> existingNodes = this.simpleKeyValuesNodes.get(node.getKey());
+      if (existingNodes == null) {
+        List<SimpleKeyValuesNode> nodes = new ArrayList<SimpleKeyValuesNode>();
+        nodes.add(node);
+        this.simpleKeyValuesNodes.put(node.getKey(), nodes);
+      } else {
+        existingNodes.add(node);
+      }
+    }
+    return node;
+  }
+
+  public ComplexKeyValuesNode add(ComplexKeyValuesNode node) {
+    if (node != null) {
+      this.simpleKeyValuesNodes.remove(node.getKey());
+      ComplexKeyValuesNode existingNode = this.complexKeyValuesNodes.get(node.getKey());
+      if (existingNode == null) {
+        this.complexKeyValuesNodes.put(node.getKey(), node);
+      } else {
+        existingNode.merge(node);
+      }
     }
     return node;
   }
@@ -100,69 +136,132 @@ public class ComplexKeyValuesNode extends KeyValueNode {
   }
 
   /**
-   * Get the {@link SimpleKeyValuesNode} with the given key.
-   * This method create a new {@link SimpleKeyValuesNode} with the
-   * combined value of all other {@link SimpleKeyValuesNode}s with the
-   * same key.
+   * Returns the {@link KeyValuesNode} with the given key.
+   * This will return either {@link SimpleKeyValuesNode} or
+   * {@link ComplexKeyValuesNode} depend on the specified {@link Class}.
+   * <p>
+   * Return null if no {@link KeyValuesNode} with the given key is found.
+   *
+   * @param key   the key.
+   * @param clazz the actual type of the {@link KeyValuesNode}.
+   * @param <T>   sub type for {@link KeyValuesNode}
+   * @return the {@link KeyValuesNode} with the given key. Null if it does not exist.
+   */
+  public <T extends KeyValuesNode> T get(String key, Class<T> clazz) {
+    if (SimpleKeyValuesNode.class.equals(clazz)) {
+      List<SimpleKeyValuesNode> nodes = this.simpleKeyValuesNodes.get(key);
+      if (nodes != null) {
+        List<String> values = new ArrayList<String>();
+        for (SimpleKeyValuesNode node : nodes) {
+          values.addAll(node.getRawData());
+        }
+        return clazz.cast(new SimpleKeyValuesNode(key, values));
+      }
+    } else if (ComplexKeyValuesNode.class.equals(clazz)) {
+      return clazz.cast(this.complexKeyValuesNodes.get(key));
+    }
+    return null;
+  }
+
+  /**
+   * @return the {@link Set} of {@link SimpleKeyValuesNode} keys
+   */
+  public Set<String> getSimpleKeySet() {
+    return Collections.unmodifiableSet(this.simpleKeyValuesNodes.keySet());
+  }
+
+  /**
+   * @return the {@link Set} of {@link ComplexKeyValuesNode} keys
+   */
+  public Set<String> getComplexKeySet() {
+    return Collections.unmodifiableSet(this.complexKeyValuesNodes.keySet());
+  }
+
+  /**
+   * Checks if the section contains a key.
    *
    * @param key the key
-   * @return the {@link SimpleKeyValuesNode} containing combined values of other
-   * {@link SimpleKeyValuesNode}s.
+   * @return whether the keys exists.
    */
-  public SimpleKeyValuesNode get(String key) {
-    List<SimpleKeyValuesNode> nodes = this.simpleKeyValuesNodes.get(key);
-    List<String> values = new ArrayList<String>();
-    for (SimpleKeyValuesNode node : nodes) {
-      values.addAll(node.getRawData());
+  public boolean containsKey(String key) {
+    return this.simpleKeyValuesNodes.containsKey(key) || this.complexKeyValuesNodes.containsKey(key);
+  }
+
+  /**
+   * Returns the {@link KeyValuesNode} type of a given key.
+   *
+   * @param key the key
+   * @return the {@link Class} of the {@link KeyValuesNode}. Null if key does not exist.
+   */
+  public Class<? extends KeyValuesNode> getNodeType(String key) {
+    if (this.simpleKeyValuesNodes.containsKey(key)) {
+      return SimpleKeyValuesNode.class;
     }
-    return new SimpleKeyValuesNode(key, values);
+    else if (this.complexKeyValuesNodes.containsKey(key)) {
+      return ComplexKeyValuesNode.class;
+    }
+    return null;
   }
 
   /**
-   * Returns the underlying ADT holding the information about
-   * this node.
-   *
-   * @return the {@link Map} holding the mapping between key and the {@link List}
-   * of {@link SimpleKeyValuesNode}s
+   * @return true if the {@link SectionNode} is empty; false otherwise.
    */
-  public Map<String, List<SimpleKeyValuesNode>> getRawData() {
-    return this.simpleKeyValuesNodes;
+  public boolean isEmpty() {
+    return this.simpleKeyValuesNodes.isEmpty() && this.complexKeyValuesNodes.isEmpty();
   }
 
   /**
-   * Removes all {@link SimpleKeyValuesNode}s with the given key from the node.
+   * Remove all values in with the given key.
+   * This will remove all {@link SimpleKeyValuesNode}s or {@link ComplexKeyValuesNode}
+   * with that key.
    *
-   * @param key the key to remove.
+   * @param key the key to remove
    */
-  public SimpleKeyValuesNode remove(String key) {
-    SimpleKeyValuesNode node = get(key);
+  public void remove(String key) {
     this.simpleKeyValuesNodes.remove(key);
-    return node;
+    this.complexKeyValuesNodes.remove(key);
   }
 
   /**
-   * Clear all the {@link SimpleKeyValuesNode}s from the node
+   * Clear all {@link SimpleKeyValuesNode}s and {@link ComplexKeyValuesNode}s.
    */
   public void clear() {
     this.simpleKeyValuesNodes.clear();
+    this.complexKeyValuesNodes.clear();
   }
 
   @Override
-  public String toString(int indent) {
+  public String asString(int indent) {
     indent = indent < 0 ? 0 : indent;
 
     StringBuilder sb = new StringBuilder();
     sb.append(StringUtils.repeat(INDENT_CHARACTERS, indent));
     sb.append(this.getKey());
     sb.append(" = {").append("\n");
-    for (Map.Entry<String, List<SimpleKeyValuesNode>> node : this.simpleKeyValuesNodes.entrySet()) {
-      for (SimpleKeyValuesNode svn : node.getValue()) {
-        sb.append(svn.toString(indent + 1));
-      }
-    }
+    sb.append(nodesAsString(indent+1));
     sb.append(StringUtils.repeat(INDENT_CHARACTERS, indent));
     sb.append("}").append("\n");
 
+    return sb.toString();
+  }
+
+  /**
+   * Returns the {@link String} representation of the all the sub {@link KeyValuesNode}s
+   *
+   * @param indent the initial indentation for this node
+   * @return the {@link String} representation of the all the sub nodes
+   */
+  protected String nodesAsString(int indent) {
+    StringBuilder sb = new StringBuilder();
+    for (Map.Entry<String, List<SimpleKeyValuesNode>> simpleNodes : this.simpleKeyValuesNodes.entrySet()) {
+      for (SimpleKeyValuesNode simpleNode : simpleNodes.getValue()) {
+        sb.append(simpleNode.asString(indent));
+      }
+    }
+
+    for (Map.Entry<String, ComplexKeyValuesNode> complexNodes : this.complexKeyValuesNodes.entrySet()) {
+      sb.append(complexNodes.getValue().asString(indent));
+    }
     return sb.toString();
   }
 
