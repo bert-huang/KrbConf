@@ -1,10 +1,11 @@
 package com.cepw.model.node;
 
-import com.cepw.utils.StringUtils;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.cepw.utils.StringUtils;
 
 /**
  * A node representing a complex key-value entry.
@@ -36,12 +37,12 @@ public class ComplexKeyValuesNode extends KeyValueNode {
    */
   public ComplexKeyValuesNode(String key, SimpleKeyValuesNode... nodes) {
     super(key);
-    this.simpleKeyValuesNodes = new LinkedHashMap<>();
+    this.simpleKeyValuesNodes = new LinkedHashMap<String, List<SimpleKeyValuesNode>>();
     if (nodes != null) {
       for (SimpleKeyValuesNode node : nodes) {
         List<SimpleKeyValuesNode> existingNodes = this.simpleKeyValuesNodes.get(node.getKey());
         if (existingNodes == null) {
-          existingNodes = new ArrayList<>();
+          existingNodes = new ArrayList<SimpleKeyValuesNode>();
           existingNodes.add(node);
           this.simpleKeyValuesNodes.put(node.getKey(), existingNodes);
         } else {
@@ -70,7 +71,7 @@ public class ComplexKeyValuesNode extends KeyValueNode {
   public SimpleKeyValuesNode add(SimpleKeyValuesNode node) {
     List<SimpleKeyValuesNode> existingNodes = this.simpleKeyValuesNodes.get(node.getKey());
     if (existingNodes == null) {
-      List<SimpleKeyValuesNode> nodes = new ArrayList<>();
+      List<SimpleKeyValuesNode> nodes = new ArrayList<SimpleKeyValuesNode>();
       nodes.add(node);
       this.simpleKeyValuesNodes.put(node.getKey(), nodes);
     } else {
@@ -110,7 +111,7 @@ public class ComplexKeyValuesNode extends KeyValueNode {
    */
   public SimpleKeyValuesNode get(String key) {
     List<SimpleKeyValuesNode> nodes = this.simpleKeyValuesNodes.get(key);
-    List<String> values = new ArrayList<>();
+    List<String> values = new ArrayList<String>();
     for (SimpleKeyValuesNode node : nodes) {
       values.addAll(node.getRawData());
     }

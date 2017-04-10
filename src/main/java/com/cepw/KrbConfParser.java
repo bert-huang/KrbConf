@@ -1,17 +1,18 @@
 package com.cepw;
 
-import com.cepw.exception.KrbConfParseException;
-import com.cepw.model.KrbConf;
-import com.cepw.model.node.ComplexKeyValuesNode;
-import com.cepw.model.node.KrbConfNode;
-import com.cepw.model.node.SectionNode;
-import com.cepw.model.node.SimpleKeyValuesNode;
 import java.io.File;
 import java.io.FileReader;
 import java.io.LineNumberReader;
 import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import com.cepw.exception.KrbConfParseException;
+import com.cepw.model.KrbConf;
+import com.cepw.model.node.ComplexKeyValuesNode;
+import com.cepw.model.node.KrbConfNode;
+import com.cepw.model.node.SectionNode;
+import com.cepw.model.node.SimpleKeyValuesNode;
 
 /**
  * A krb.conf parser.
@@ -62,7 +63,7 @@ public class KrbConfParser {
       LineNumberReader lr = new LineNumberReader(new FileReader(file));
 
       String line;
-      Stack<KrbConfNode> nodeStack = new Stack<>();
+      Stack<KrbConfNode> nodeStack = new Stack<KrbConfNode>();
       while ((line = lr.readLine()) != null) {
 
         /* Ignore blank or commented lines */
