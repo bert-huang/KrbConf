@@ -90,16 +90,6 @@ public class SimpleKeyValuesNode extends KeyValuesNode {
     return StringUtils.join(values, " ");
   }
 
-  /**
-   * Returns the underlying ADT holding the information about
-   * this node.
-   *
-   * @return the {@link List} holding values of the {@link SimpleKeyValuesNode}
-   */
-  public List<String> getRawData() {
-    return values;
-  }
-
   @Override
   public String asString(int indent) {
     StringBuilder sb = new StringBuilder();

@@ -75,10 +75,10 @@ public class ComplexKeyValuesNode extends KeyValuesNode {
    * Constructor.
    *
    * @param key   the key of the node.
-   * @param nodes the {@link List} of {@link SimpleKeyValuesNode}s.
+   * @param nodes the {@link List} of {@link KeyValuesNode}s.
    */
-  public ComplexKeyValuesNode(String key, List<SimpleKeyValuesNode> nodes) {
-    this(key, nodes.toArray(new SimpleKeyValuesNode[nodes.size()]));
+  public ComplexKeyValuesNode(String key, List<KeyValuesNode> nodes) {
+    this(key, nodes.toArray(new KeyValuesNode[nodes.size()]));
   }
 
   /**
@@ -103,6 +103,12 @@ public class ComplexKeyValuesNode extends KeyValuesNode {
     return node;
   }
 
+  /**
+   * Adds a {@link ComplexKeyValuesNode} to the node.
+   *
+   * @param node the {@link ComplexKeyValuesNode}
+   * @return the added {@link ComplexKeyValuesNode}
+   */
   public ComplexKeyValuesNode add(ComplexKeyValuesNode node) {
     if (node != null) {
       this.simpleKeyValuesNodes.remove(node.getKey());
@@ -153,7 +159,7 @@ public class ComplexKeyValuesNode extends KeyValuesNode {
       if (nodes != null) {
         List<String> values = new ArrayList<String>();
         for (SimpleKeyValuesNode node : nodes) {
-          values.addAll(node.getRawData());
+          values.addAll(node.getValues());
         }
         return clazz.cast(new SimpleKeyValuesNode(key, values));
       }
