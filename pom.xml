@@ -3,22 +3,18 @@
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
+
   <groupId>com.cepw</groupId>
-  <artifactId>krb-conf</artifactId>
+  <artifactId>kerberos-config-editor</artifactId>
   <packaging>jar</packaging>
-  <name>Kerberos Config Tool</name>
+  <name>Kerberos Configuration Editor</name>
+  <description>Simple Java library for creating, parsing, and modifying Kerberos configurations.</description>
   <version>1.0</version>
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.1</version>
-        <configuration>
-          <source>1.6</source>
-          <target>1.7</target>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
+
+  <licenses>
+    <license>
+      <name>MIT License</name>
+      <url>https://github.com/bert-huang/KrbConf/blob/master/LICENSE.txt</url>
+    </license>
+  </licenses>
 </project>

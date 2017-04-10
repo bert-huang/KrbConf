@@ -47,7 +47,7 @@ public abstract class KrbConfNode implements Serializable {
    * @param indent the initial indentation for this node
    * @return the {@link String} representation of the node
    */
-  public abstract String toString(int indent);
+  public abstract String asString(int indent);
 
   @Override
   public boolean equals(Object o) {
@@ -66,6 +66,6 @@ public abstract class KrbConfNode implements Serializable {
 
   @Override
   public String toString() {
-    return toString(0);
+    return asString(0);
   }
 }

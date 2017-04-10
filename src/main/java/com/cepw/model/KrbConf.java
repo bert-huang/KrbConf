@@ -1,11 +1,5 @@
 package com.cepw.model;
 
-import java.io.Serializable;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import com.cepw.model.node.SectionNode;
 import com.cepw.model.node.section.AppDefaultsSection;
 import com.cepw.model.node.section.CAPathsSection;
@@ -18,6 +12,11 @@ import com.cepw.model.node.section.LoggingSection;
 import com.cepw.model.node.section.LoginSection;
 import com.cepw.model.node.section.PluginsSection;
 import com.cepw.model.node.section.RealmsSection;
+import java.io.Serializable;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * The class representing the Kerberos configuration.
@@ -172,7 +171,7 @@ public class KrbConf implements Serializable {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     for (SectionNode section : sections.values()) {
-      sb.append(section.toString(0));
+      sb.append(section.asString(0));
     }
     return sb.toString();
   }

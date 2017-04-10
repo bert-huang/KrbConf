@@ -4,7 +4,7 @@ package com.cepw.model.node;
  * A class representing key-value nodes.
  * Can be either {@link SimpleKeyValuesNode} or {@link ComplexKeyValuesNode}
  */
-public abstract class KeyValueNode extends KrbConfNode {
+public abstract class KeyValuesNode extends KrbConfNode {
 
   /**
    * The {@code serialVersionUID}
@@ -16,7 +16,7 @@ public abstract class KeyValueNode extends KrbConfNode {
    *
    * @param key the key of the node.
    */
-  public KeyValueNode(String key) {
+  public KeyValuesNode(String key) {
     super(key);
   }
 }
