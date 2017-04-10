@@ -1,8 +1,9 @@
 package com.cepw.model.node;
 
-import com.cepw.utils.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.cepw.utils.StringUtils;
 
 /**
  * A node representing a simple key-value entry.
@@ -30,7 +31,7 @@ public class SimpleKeyValuesNode extends KeyValueNode {
    */
   public SimpleKeyValuesNode(String key, String... vargs) {
     super(key);
-    List<String> values = new ArrayList<>();
+    List<String> values = new ArrayList<String>();
     if (vargs != null) {
       for (String value : vargs) {
         values.add(value.trim());

@@ -1,5 +1,11 @@
 package com.cepw.model;
 
+import java.io.Serializable;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import com.cepw.model.node.SectionNode;
 import com.cepw.model.node.section.AppDefaultsSection;
 import com.cepw.model.node.section.CAPathsSection;
@@ -12,11 +18,6 @@ import com.cepw.model.node.section.LoggingSection;
 import com.cepw.model.node.section.LoginSection;
 import com.cepw.model.node.section.PluginsSection;
 import com.cepw.model.node.section.RealmsSection;
-import java.io.Serializable;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 /**
  * The class representing the Kerberos configuration.
@@ -35,7 +36,7 @@ public class KrbConf implements Serializable {
   public static final Map<String, Class<? extends SectionNode>> SECTION_CLASSES;
 
   static {
-    Map<String, Class<? extends SectionNode>> sections = new HashMap<>();
+    Map<String, Class<? extends SectionNode>> sections = new HashMap<String, Class<? extends SectionNode>>();
     sections.put(AppDefaultsSection.KEY, AppDefaultsSection.class);
     sections.put(CAPathsSection.KEY, CAPathsSection.class);
     sections.put(DbDefaultsSection.KEY, DbDefaultsSection.class);
@@ -62,7 +63,7 @@ public class KrbConf implements Serializable {
    * Initialises all possible sections.
    */
   public KrbConf() {
-    sections = new LinkedHashMap<>();
+    sections = new LinkedHashMap<Class<? extends SectionNode>, SectionNode>();
   }
 
   /**
@@ -160,9 +161,10 @@ public class KrbConf implements Serializable {
         }
         return clazz.cast(section);
       }
-    } catch (IllegalAccessException | InstantiationException e) {
-      /* Nothing we can do. */
     }
+    catch (IllegalAccessException e) { /* Nothing we can do */ }
+    catch (InstantiationException e) { /* Nothing we can do */ }
+
     return null;
   }
 
