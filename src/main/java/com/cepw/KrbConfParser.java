@@ -67,7 +67,7 @@ public class KrbConfParser {
 
         /* Ignore blank or commented lines */
         line = line.trim();
-        if (line.isEmpty() || line.startsWith("#") || line.startsWith(";")) {
+        if (line.length() == 0 || line.startsWith("#") || line.startsWith(";")) {
           continue;
         }
 
