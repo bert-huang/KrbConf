@@ -1,17 +1,17 @@
 package com.cepw.model.node;
 
+import com.cepw.utils.StringUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.cepw.utils.StringUtils;
 import java.util.Set;
 
 /**
  * A node representing a complex key-value entry.
- * A {@link ComplexKeyValuesNode} can hold multiple {@link SimpleKeyValuesNode}s.
+ * A {@link ComplexKeyValuesNode} can hold multiple {@link SimpleKeyValuesNode}s and
+ * multiple {@link ComplexKeyValuesNode}s.
  */
 public class ComplexKeyValuesNode extends KeyValuesNode {
 
@@ -234,15 +234,11 @@ public class ComplexKeyValuesNode extends KeyValuesNode {
   public String asString(int indent) {
     indent = indent < 0 ? 0 : indent;
 
-    StringBuilder sb = new StringBuilder();
-    sb.append(StringUtils.repeat(INDENT_CHARACTERS, indent));
-    sb.append(this.getKey());
-    sb.append(" = {").append("\n");
-    sb.append(nodesAsString(indent+1));
-    sb.append(StringUtils.repeat(INDENT_CHARACTERS, indent));
-    sb.append("}").append("\n");
-
-    return sb.toString();
+    return StringUtils.repeat(INDENT_CHARACTERS, indent) +
+            this.getKey() + " = {" + "\n" +
+            nodesAsString(indent + 1) +
+            StringUtils.repeat(INDENT_CHARACTERS, indent) +
+            "}" + "\n";
   }
 
   /**
@@ -253,14 +249,13 @@ public class ComplexKeyValuesNode extends KeyValuesNode {
    */
   protected String nodesAsString(int indent) {
     StringBuilder sb = new StringBuilder();
-    for (Map.Entry<String, List<SimpleKeyValuesNode>> simpleNodes : this.simpleKeyValuesNodes.entrySet()) {
-      for (SimpleKeyValuesNode simpleNode : simpleNodes.getValue()) {
+    for (List<SimpleKeyValuesNode> simpleNodes : this.simpleKeyValuesNodes.values()) {
+      for (SimpleKeyValuesNode simpleNode : simpleNodes) {
         sb.append(simpleNode.asString(indent));
       }
     }
-
-    for (Map.Entry<String, ComplexKeyValuesNode> complexNodes : this.complexKeyValuesNodes.entrySet()) {
-      sb.append(complexNodes.getValue().asString(indent));
+    for (ComplexKeyValuesNode complexNode : this.complexKeyValuesNodes.values()) {
+      sb.append(complexNode.asString(indent));
     }
     return sb.toString();
   }
@@ -273,13 +268,15 @@ public class ComplexKeyValuesNode extends KeyValuesNode {
 
     ComplexKeyValuesNode that = (ComplexKeyValuesNode) o;
 
-    return simpleKeyValuesNodes.equals(that.simpleKeyValuesNodes);
+    if (!simpleKeyValuesNodes.equals(that.simpleKeyValuesNodes)) return false;
+    return complexKeyValuesNodes.equals(that.complexKeyValuesNodes);
   }
 
   @Override
   public int hashCode() {
     int result = super.hashCode();
     result = 31 * result + simpleKeyValuesNodes.hashCode();
+    result = 31 * result + complexKeyValuesNodes.hashCode();
     return result;
   }
 }

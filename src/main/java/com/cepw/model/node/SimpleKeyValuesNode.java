@@ -1,9 +1,8 @@
 package com.cepw.model.node;
 
+import com.cepw.utils.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.cepw.utils.StringUtils;
 
 /**
  * A node representing a simple key-value entry.
