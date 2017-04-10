@@ -1,10 +1,11 @@
 package com.cepw.model.node;
 
-import com.cepw.utils.StringUtils;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.cepw.utils.StringUtils;
 
 /**
  * A node representing a section and all of it's properties.
@@ -35,8 +36,8 @@ public abstract class SectionNode extends KrbConfNode {
    */
   public SectionNode(String key) {
     super(key);
-    this.simpleKeyValuesNodes = new LinkedHashMap<>();
-    this.complexKeyValuesNodes = new LinkedHashMap<>();
+    this.simpleKeyValuesNodes = new LinkedHashMap<String, List<SimpleKeyValuesNode>>();
+    this.complexKeyValuesNodes = new LinkedHashMap<String, ComplexKeyValuesNode>();
   }
 
   /**
@@ -48,7 +49,7 @@ public abstract class SectionNode extends KrbConfNode {
   public SimpleKeyValuesNode add(SimpleKeyValuesNode node) {
     List<SimpleKeyValuesNode> existingNodes = this.simpleKeyValuesNodes.get(node.getKey());
     if (existingNodes == null) {
-      List<SimpleKeyValuesNode> nodes = new ArrayList<>();
+      List<SimpleKeyValuesNode> nodes = new ArrayList<SimpleKeyValuesNode>();
       nodes.add(node);
       this.simpleKeyValuesNodes.put(node.getKey(), nodes);
     } else {
@@ -110,7 +111,7 @@ public abstract class SectionNode extends KrbConfNode {
     if (SimpleKeyValuesNode.class.equals(clazz)) {
       List<SimpleKeyValuesNode> nodes = this.simpleKeyValuesNodes.get(key);
       if (nodes != null) {
-        List<String> values = new ArrayList<>();
+        List<String> values = new ArrayList<String>();
         for (SimpleKeyValuesNode node : nodes) {
           values.addAll(node.getRawData());
         }
